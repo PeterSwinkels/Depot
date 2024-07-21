@@ -15,10 +15,10 @@ Public GebruikerIsBeheerder As Boolean    'Geeft aan of ingelogde gebruiker een 
 Public GegevensOpslaan As Boolean         'Geeft aan of gegevens bij het afsluiten worden opgeslagen.
 Public GekopieerdArtikel As String        'Bevat het nummer van artikel dat is gekopieerd uit de voorraad lijst.
 
-Public Fakturen As New FakturenObject     'Bevat een verwijzing naar het fakturen object.
-Public Faktuur As New FaktuurObject       'Bevat een verwijzing naar het faktuur object.
-Public Klanten As New KlantenObject       'Bevat een verwijzing naar het klanten object.
-Public Voorraad As New VoorraadObject     'Bevat een verwijzing naar het voorraad object.
+Public Fakturen As New FakturenObject     'Bevat een verwijzing naar het fakturenobject.
+Public Faktuur As New FaktuurObject       'Bevat een verwijzing naar het faktuurobject.
+Public Klanten As New KlantenObject       'Bevat een verwijzing naar het klantenobject.
+Public Voorraad As New VoorraadObject     'Bevat een verwijzing naar het voorraadobject.
 
 'Deze procedure controleert of gebruiker een beheerder is en geeft een melding wanneer dit niet het geval is.
 Public Function Beheerder() As Boolean
@@ -28,7 +28,7 @@ Dim Keuze As Long
    If Not GebruikerIsBeheerder Then
       MsgBox "Alleen de beheerder kan deze functie gebruiken.", vbExclamation
    End If
-  
+
 EindeRoutine:
    Beheerder = GebruikerIsBeheerder
    Exit Function
@@ -47,33 +47,34 @@ Dim ActieveMap As String
 Dim Keuze As Long
 
    Screen.MousePointer = vbHourglass
-   
+
    ActiefBestand = vbNullString
    GebruikerIsBeheerder = False
    GegevensOpslaan = True
    GekopieerdArtikel = vbNullString
-   
+
    ActieveMap = App.Path
    ChDrive Left$(App.Path, InStr(App.Path, ":"))
    ChDir App.Path
-   
+
    ActieveMap = ".\Data"
    If Dir$(".\Data\", vbArchive Or vbDirectory Or vbHidden Or vbNormal Or vbReadOnly Or vbSystem) = vbNullString Then
       MkDir ".\Data"
    End If
-   
+
    OpenInstellingen
    Faktuur.OpenFaktuurTekst
    Klanten.OpenGegevens
    Voorraad.OpenGegevens
-   
+
    VraagWachtwoord
-   
-   DepotBeheerderVenster.Show
+
+   DepotbeheerderVenster.Show
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -115,9 +116,10 @@ Dim Lengte As Long
          Faktuur.SubNrPeriode = Input$(1, BestandH)
       End If
    Close BestandH
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -136,9 +138,10 @@ Dim Keuze As Long
       Voorraad.SlaGegevensOp
       SlaInstellingenOp
    End If
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -171,17 +174,19 @@ Dim Keuze As Long
       Print #BestandH, Chr$(Len(Faktuur.LaatsteSubNr())); Faktuur.LaatsteSubNr();
       Print #BestandH, Faktuur.SubNrPeriode();
    Close BestandH
+
    SetAttr ".\Data\Depot.ins", vbHidden Or vbReadOnly Or vbSystem
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure stelt een nieuw beheerder wachtwoord in.
+'Deze procedure stelt een nieuw beheerderwachtwoord in.
 Public Sub StelWachtwoordIn(NieuwWachtwoord As String)
 On Error GoTo Fout
 Dim Keuze As Long
@@ -193,9 +198,10 @@ Dim Keuze As Long
          MsgBox "Onjuist wachtwoord.", vbExclamation
       End If
    End If
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -227,11 +233,11 @@ Dim Waarde As String
       Case "#"
          Waarde = Format$(Faktuur.SubNr(), String$(Len(Faktuur.MaxSubNrs()), "0"))
    End Select
- 
+
 EindeRoutine:
    SymboolWaarde = Waarde
    Exit Function
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -255,17 +261,18 @@ Dim Keuze As Long
          End If
       End If
    End If
-   
-   DepotBeheerderVenster.Caption = "Depot Beheerder - Ingelogd als "
+
+   DepotbeheerderVenster.Caption = "Depot Beheerder - Ingelogd als "
    If GebruikerIsBeheerder Then
-      DepotBeheerderVenster.Caption = DepotBeheerderVenster.Caption & "beheerder"
+      DepotbeheerderVenster.Caption = DepotbeheerderVenster.Caption & "beheerder"
    Else
-      DepotBeheerderVenster.Caption = DepotBeheerderVenster.Caption & "gebruiker"
+      DepotbeheerderVenster.Caption = DepotbeheerderVenster.Caption & "gebruiker"
    End If
-   DepotBeheerderVenster.Caption = DepotBeheerderVenster.Caption & "."
+   DepotbeheerderVenster.Caption = DepotbeheerderVenster.Caption & "."
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine

@@ -42,7 +42,7 @@ Begin VB.Form FakturenVenster
          Width           =   1095
       End
    End
-   Begin DepotBeheerderProgramma.LijstObject FakturenLijst 
+   Begin DepotbeheerderProgramma.LijstObject FakturenLijst 
       Height          =   3615
       Left            =   120
       TabIndex        =   0
@@ -66,6 +66,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -82,6 +83,7 @@ Dim Keuze As Long
 
    Fakturen.MaakLijst
    FakturenLijst.WerkLijstBij
+
 EindeRoutine:
    Exit Sub
 
@@ -98,14 +100,15 @@ Dim Keuze As Long
 
    AnnulerenKnop.ToolTipText = "Sluit dit venster."
    OpenenKnop.ToolTipText = "Opent het geselecteerde fakturen."
-   
+
    Me.Left = MenuVenster.Left + MenuVenster.Width + 128
    Me.Top = MenuVenster.Top
    Me.Width = DepotBeheerderVenster.Width / 2
    Me.Height = DepotBeheerderVenster.Height / 2
-   
+
    Fakturen.MaakLijst
    Set FakturenLijst.DataBron = Fakturen
+
 EindeRoutine:
    Exit Sub
 
@@ -118,11 +121,12 @@ End Sub
 'Deze procedure past de objecten in dit venster aan de nieuwe afmetingen aan.
 Private Sub Form_Resize()
 On Error Resume Next
+
    FakturenLijst.Width = Me.ScaleWidth - 2
    FakturenLijst.Height = Me.ScaleHeight - 3
    KnoppenBalk.Left = Me.ScaleWidth - KnoppenBalk.Width - 1
    KnoppenBalk.Top = Me.ScaleHeight - 2
-   
+
    FakturenLijst.WerkLijstBij
 End Sub
 
@@ -130,11 +134,12 @@ End Sub
 Private Sub OpenenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If Not Fakturen.AantalItems() = 0 Then
       Faktuur.OpenFaktuur Fakturen.Data(FkFaktuurNummer, FakturenLijst.Selectie())
       Unload Me
    End If
+
 EindeRoutine:
    Exit Sub
 

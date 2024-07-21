@@ -53,7 +53,7 @@ Begin VB.Form InvoerVenster
       Top             =   120
       Width           =   2175
    End
-   Begin VB.Label VeldNaam 
+   Begin VB.Label VeldnaamLabel 
       Alignment       =   1  'Right Justify
       Height          =   255
       Index           =   0
@@ -123,16 +123,16 @@ Dim Veld As Long
    For Veld = 0 To DataBron.AantalVelden() - 1
       If Veld > 0 Then
          Load InvoerVeld(Veld)
-         Load VeldNaam(Veld)
+         Load VeldnaamLabel(Veld)
       End If
       InvoerVeld(Veld).Text = Buffer(Veld)
       InvoerVeld(Veld).TabIndex = Veld
       InvoerVeld(Veld).Top = (Veld * 1.5) + 0.5
       InvoerVeld(Veld).Visible = True
-      VeldNaam(Veld) = DataBron.VeldNaam(Veld)
-      VeldNaam(Veld).ToolTipText = "De inhoud van dit veld."
-      VeldNaam(Veld).Top = (Veld * 1.5) + 0.5
-      VeldNaam(Veld).Visible = True
+      VeldnaamLabel(Veld) = DataBron.VeldNaam(Veld)
+      VeldnaamLabel(Veld).ToolTipText = "De inhoud van dit veld."
+      VeldnaamLabel(Veld).Top = (Veld * 1.5) + 0.5
+      VeldnaamLabel(Veld).Visible = True
    Next Veld
    
    If ActieIsToeVoegen Then

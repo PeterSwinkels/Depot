@@ -1,8 +1,8 @@
 VERSION 5.00
-Begin VB.MDIForm DepotBeheerderVenster 
+Begin VB.MDIForm DepotbeheerderVenster 
    AutoShowChildren=   0   'False
    BackColor       =   &H8000000C&
-   Caption         =   "Depot Beheerder"
+   Caption         =   "Depotbeheerder"
    ClientHeight    =   3945
    ClientLeft      =   60
    ClientTop       =   330
@@ -25,7 +25,7 @@ Begin VB.MDIForm DepotBeheerderVenster
       Caption         =   "&Informatie"
    End
 End
-Attribute VB_Name = "DepotBeheerderVenster"
+Attribute VB_Name = "DepotbeheerderVenster"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -42,6 +42,7 @@ Dim Keuze As Long
       BackupVenster.Show
       BackupVenster.ZOrder
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -67,6 +68,7 @@ Dim Pad As String
       Pad = VoegScheidingstekenToe(App.Path)
       Shell "Mshta.exe """ & Pad & "Handleiding.hta""", vbNormalFocus
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -82,6 +84,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    ToonProgrammaInformatie
+
 EindeRoutine:
    Exit Sub
 
@@ -97,6 +100,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Me.WindowState = vbMaximized
+
 EindeRoutine:
    Exit Sub
 
@@ -113,8 +117,9 @@ Dim Keuze As Long
 
    Me.Width = Screen.Width / 1.5
    Me.Height = Screen.Height / 1.5
-   
+
    MenuVenster.Show
+
 EindeRoutine:
    Exit Sub
 
@@ -130,6 +135,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    SlaGegevensOp
+
 EindeRoutine:
    Exit Sub
 
@@ -149,6 +155,7 @@ Dim Keuze As Long
    Else
       VraagWachtwoord
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -165,6 +172,7 @@ Dim Keuze As Long
 
    ZoekVenster.Show
    ZoekVenster.ZOrder
+
 EindeRoutine:
    Exit Sub
 

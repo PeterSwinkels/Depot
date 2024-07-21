@@ -42,76 +42,78 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'Deze module bevat het lijst object.
+'Deze module bevat het lijstobject.
 Option Explicit
 Private AantalZichtbaar As Long        'Bevat het aantal zichtbare items in de lijst.
 Private BovensteItemV As Long          'Bevat het bovenste zichtbare item in de lijst.
-Private DataBronV As Object            'Bevat de bron van de gegevens in de lijst.
-Private DataBronIngesteld As Boolean   'Geeft aan of de bron van de gegevens is geselecteerd.
+Private DatabronV As Object            'Bevat de bron van de gegevens in de lijst.
+Private DatabronIngesteld As Boolean   'Geeft aan of de bron van de gegevens is geselecteerd.
 Private SelectieV As Long              'Bevat het geselecteerde item in de lijst.
 
-'Deze procedure past de lijst aan wanneer de schuifbalkknop wordt verplaatst.
-Private Sub SchuifBalk_Change()
+'Deze procedure legt het bovenste item in de lijst vast.
+Public Property Let BovensteItem(NieuwBovensteItem As Long)
 On Error GoTo Fout
 Dim Keuze As Long
-   
-   BovensteItemV = SchuifBalk.Value
+
+   SchuifBalk.Value = NieuwBovensteItem
+
+EindeRoutine:
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure legt de opgegeven databron vast.
+Public Property Set Databron(NieuweDataBron As Object)
+On Error GoTo Fout
+Dim Keuze As Long
+
+   Set DatabronV = NieuweDataBron
+   DatabronIngesteld = True
+
+EindeRoutine:
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt het geselecteerde item terug.
+Public Property Get Selectie() As Long
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   Selectie = SelectieV
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure legt de opgegeven selectie vast.
+Public Property Let Selectie(NieuweSelectie As Long)
+On Error GoTo Fout
+Dim Keuze As Long
+
+   SelectieV = NieuweSelectie
    WerkLijstBij
-   
+
 EindeRoutine:
-   Exit Sub
-   
+   Exit Property
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
-End Sub
-
-'Deze procedure past de selectie aan wanneer de gebruiker door de lijst scrolt met de toetsen.
-Private Sub UitvoerVenster_KeyUp(KeyCode As Integer, Shift As Integer)
-On Error GoTo Fout
-Dim Keuze As Long
-
-   Select Case KeyCode
-      Case vbKeyUp
-         If SelectieV > 0 Then SelectieV = SelectieV - 1
-      Case vbKeyDown
-         If SelectieV < DataBronV.AantalItems() - 1 Then SelectieV = SelectieV + 1
-   End Select
- 
-   WerkLijstBij
-
-EindeRoutine:
-   Exit Sub
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Sub
-
-'Deze procedure past de selectie aan wanneer de gebruiker met de muis in de lijst klikt.
-Private Sub UitvoerVenster_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
-On Error GoTo Fout
-Dim Keuze As Long
-Dim NieuweSelectie As Long
-
-   If DataBronIngesteld Then
-      NieuweSelectie = (CLng(y - 1) + BovensteItemV)
-      If NieuweSelectie <= DataBronV.AantalItems() Then
-         SelectieV = NieuweSelectie
-         WerkLijstBij
-      End If
-   End If
-
-EindeRoutine:
-   Exit Sub
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Sub
+End Property
 
 'Deze procedure toont de gegevens in de lijst.
 Public Sub WerkLijstBij()
@@ -126,22 +128,22 @@ Dim VeldBreedte As Single
 Dim VeldX As Single
 Dim VeldY As Single
 
-   If DataBronIngesteld Then
-      If SelectieV >= DataBronV.AantalItems() Then SelectieV = DataBronV.AantalItems() - 1
-      If SelectieV < 0 And DataBronV.AantalItems() > 0 Then SelectieV = 0
-      SchuifBalk.Max = DataBronV.AantalItems()
-      
-      Percentage = 100 / DataBronV.TotaleVeldBreedte()
-      
+   If DatabronIngesteld Then
+      If SelectieV >= DatabronV.AantalItems() Then SelectieV = DatabronV.AantalItems() - 1
+      If SelectieV < 0 And DatabronV.AantalItems() > 0 Then SelectieV = 0
+      SchuifBalk.Max = DatabronV.AantalItems()
+
+      Percentage = 100 / DatabronV.TotaleVeldBreedte()
+
       Screen.MousePointer = vbHourglass
       UitvoerVenster.Cls
       UitvoerVenster.Font.Bold = True
-      For Veld = 0 To DataBronV.AantalVelden() - 1
+      For Veld = 0 To DatabronV.AantalVelden() - 1
          VeldX = UitvoerVenster.CurrentX
-         Data = DataBronV.VeldNaam(Veld)
-         VeldBreedte = BerekenProcent(Percentage * DataBronV.VeldBreedte(Veld), UitvoerVenster.ScaleWidth)
+         Data = DatabronV.VeldNaam(Veld)
+         VeldBreedte = BerekenProcent(Percentage * DatabronV.VeldBreedte(Veld), UitvoerVenster.ScaleWidth)
          DataBreedte = VeldBreedte * (Len(Data) / UitvoerVenster.TextWidth(Data))
-         If DataBronV.VeldRechtsUitlijnen(Veld) Then
+         If DatabronV.VeldRechtsUitlijnen(Veld) Then
             Data = Right$(Data, DataBreedte)
             UitvoerVenster.CurrentX = (UitvoerVenster.CurrentX + VeldBreedte - 1) - UitvoerVenster.TextWidth(Data)
          Else
@@ -154,14 +156,14 @@ Dim VeldY As Single
       UitvoerVenster.CurrentY = 1
       UitvoerVenster.Font.Bold = False
       For Item = BovensteItemV To BovensteItemV + AantalZichtbaar
-         If Item = DataBronV.AantalItems() Then Exit For
+         If Item = DatabronV.AantalItems() Then Exit For
          UitvoerVenster.CurrentX = 0
          VeldY = UitvoerVenster.CurrentY
-         For Veld = 0 To DataBronV.AantalVelden() - 1
+         For Veld = 0 To DatabronV.AantalVelden() - 1
             VeldX = UitvoerVenster.CurrentX
-            Data = DataBronV.Data(Veld, Item)
-            VeldBreedte = BerekenProcent(Percentage * DataBronV.VeldBreedte(Veld), UitvoerVenster.ScaleWidth)
-            If DataBronV.VeldRechtsUitlijnen(Veld) Then
+            Data = DatabronV.Data(Veld, Item)
+            VeldBreedte = BerekenProcent(Percentage * DatabronV.VeldBreedte(Veld), UitvoerVenster.ScaleWidth)
+            If DatabronV.VeldRechtsUitlijnen(Veld) Then
                Data = Right$(Data, DataBreedte)
                UitvoerVenster.CurrentX = (UitvoerVenster.CurrentX + VeldBreedte - 1) - UitvoerVenster.TextWidth(Data)
             Else
@@ -174,79 +176,79 @@ Dim VeldY As Single
          UitvoerVenster.CurrentY = VeldY + 1
       Next Item
    End If
- 
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure legt het bovenste item in de lijst vast.
-Public Property Let BovensteItem(NieuwBovensteItem As Long)
+'Deze procedure past de lijst aan wanneer de schuifbalkknop wordt verplaatst.
+Private Sub SchuifBalk_Change()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   SchuifBalk.Value = NieuwBovensteItem
-EindeRoutine:
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure legt de opgegeven databron vast.
-Public Property Set DataBron(NieuweDataBron As Object)
-On Error GoTo Fout
-Dim Keuze As Long
-   
-   Set DataBronV = NieuweDataBron
-   DataBronIngesteld = True
-
-EindeRoutine:
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt het geselecteerde item terug.
-Public Property Get Selectie() As Long
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   Selectie = SelectieV
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure legt de opgegeven selectie vast.
-Public Property Let Selectie(NieuweSelectie As Long)
-On Error GoTo Fout
-Dim Keuze As Long
-   
-   SelectieV = NieuweSelectie
+   BovensteItemV = SchuifBalk.Value
    WerkLijstBij
-   
+
 EindeRoutine:
-   Exit Property
-   
+   Exit Sub
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
-End Property
+End Sub
+
+'Deze procedure past de selectie aan wanneer de gebruiker door de lijst scrolt met de navigatie toetsen.
+Private Sub UitvoerVenster_KeyUp(KeyCode As Integer, Shift As Integer)
+On Error GoTo Fout
+Dim Keuze As Long
+
+   Select Case KeyCode
+      Case vbKeyUp
+         If SelectieV > 0 Then SelectieV = SelectieV - 1
+      Case vbKeyDown
+         If SelectieV < DatabronV.AantalItems() - 1 Then SelectieV = SelectieV + 1
+   End Select
+
+   WerkLijstBij
+
+EindeRoutine:
+   Exit Sub
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Sub
+
+'Deze procedure past de selectie aan wanneer de gebruiker met de muis in de lijst klikt.
+Private Sub UitvoerVenster_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
+On Error GoTo Fout
+Dim Keuze As Long
+Dim NieuweSelectie As Long
+
+   If DatabronIngesteld Then
+      NieuweSelectie = (CLng(y - 1) + BovensteItemV)
+      If NieuweSelectie <= DatabronV.AantalItems() Then
+         SelectieV = NieuweSelectie
+         WerkLijstBij
+      End If
+   End If
+
+EindeRoutine:
+   Exit Sub
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Sub
 
 'Deze procedure stelt dit object in.
 Private Sub UserControl_Initialize()
@@ -255,13 +257,13 @@ Dim Keuze As Long
 
    AantalZichtbaar = 0
    BovensteItemV = 0
-   Set DataBronV = Nothing
-   DataBronIngesteld = False
+   Set DatabronV = Nothing
+   DatabronIngesteld = False
    SelectieV = 0
-      
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -271,6 +273,7 @@ End Sub
 'Deze procedure past de objecten in dit object aan de nieuwe afmetingen aan.
 Private Sub UserControl_Resize()
 On Error Resume Next
+
    AantalZichtbaar = Int(ScaleHeight) - 2
    SchuifBalk.Left = ScaleWidth - 2
    SchuifBalk.Height = ScaleHeight

@@ -67,9 +67,10 @@ Option Explicit
 Private Sub FakturenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    FaktuurVenster.Show
    FaktuurVenster.ZOrder
+
 EindeRoutine:
    Exit Sub
 
@@ -83,15 +84,16 @@ End Sub
 Private Sub Form_Load()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    FakturenKnop.ToolTipText = "Toont het fakturen venster."
    InstellingenKnop.ToolTipText = "Toont het instellingen venster."
    KlantenKnop.ToolTipText = "Toont het klanten venster."
    SluitenKnop.ToolTipText = "Sluit dit programma."
    VoorraadKnop.ToolTipText = "Toont het voorraad venster."
-      
+
    Me.Left = 128
    Me.Top = 128
+
 EindeRoutine:
    Exit Sub
 
@@ -108,6 +110,7 @@ Dim Keuze As Long
 
    InstellingenVenster.Show
    InstellingenVenster.ZOrder
+
 EindeRoutine:
    Exit Sub
 
@@ -121,9 +124,10 @@ End Sub
 Private Sub KlantenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantenVenster.Show
    KlantenVenster.ZOrder
+
 EindeRoutine:
    Exit Sub
 
@@ -137,8 +141,9 @@ End Sub
 Private Sub SluitenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
-   Unload DepotBeheerderVenster
+
+   Unload DepotbeheerderVenster
+
 EindeRoutine:
    Exit Sub
 
@@ -152,9 +157,10 @@ End Sub
 Private Sub VoorraadKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    VoorraadVenster.Show
    VoorraadVenster.ZOrder
+
 EindeRoutine:
    Exit Sub
 

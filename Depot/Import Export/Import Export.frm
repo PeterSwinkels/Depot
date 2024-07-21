@@ -12,7 +12,7 @@ Begin VB.Form ImportExportVenster
    ScaleMode       =   4  'Character
    ScaleWidth      =   40.25
    StartUpPosition =   2  'CenterScreen
-   Begin VB.ComboBox VeldTekenLijst 
+   Begin VB.ComboBox VeldtekenLijst 
       Height          =   315
       ItemData        =   "Import Export.frx":0000
       Left            =   2760
@@ -96,7 +96,7 @@ Begin VB.Form ImportExportVenster
       Width           =   735
    End
    Begin VB.Label VeldVolgordeLabel 
-      Caption         =   "Veld volgorde:"
+      Caption         =   "Veldvolgorde:"
       Height          =   255
       Left            =   120
       TabIndex        =   8
@@ -129,13 +129,13 @@ Dim Keuze As Long
       ActiefBestand = Bestand
    End If
    
-   Select Case VeldTekenLijst.ListIndex
+   Select Case VeldtekenLijst.ListIndex
       Case 1
-         VeldScheidTekens = " "
+         Veldscheidingstekens = " "
       Case 2
-         VeldScheidTekens = vbTab
+         Veldscheidingstekens = vbTab
       Case Else
-         VeldScheidTekens = VeldTekenLijst.Text
+         Veldscheidingstekens = VeldtekenLijst.Text
    End Select
    
 EindeRoutine:
@@ -225,7 +225,7 @@ Dim VeldTypeNr As Long
    BestandVeld.ToolTipText = "Het te exporteren/importeren bestand."
    MappenLijst.ToolTipText = "De mappen in het geselecteerde station."
    StationLijst.ToolTipText = "De beschikbare stations."
-   VeldTekenLijst.ToolTipText = "Geeft aan welke tekens de velden van elkaar scheiden."
+   VeldtekenLijst.ToolTipText = "Geeft aan welke tekens de velden van elkaar scheiden."
    
    If ActieIsImporteren Then
       ActieKnop.ToolTipText = "Importeert de gegevens."
@@ -241,33 +241,33 @@ Dim VeldTypeNr As Long
    
    MappenLijst.Path = VerwijderBestandsnaam(Bestand)
    
-   For Veld = 0 To DataBron.AantalVelden() - 1
+   For Veld = 0 To Databron.AantalVelden() - 1
       If Veld > 0 Then Load VeldTypeLijst(Veld)
       VeldTypeLijst(Veld).Clear
       VeldTypeLijst(Veld).AddItem "(Leeg)"
       VeldTypeLijst(Veld).ToolTipText = "Kent een veld toe aan de gegevens."
       VeldTypeLijst(Veld).Top = (Veld * 1.25) + 2
       VeldTypeLijst(Veld).Visible = True
-      For VeldTypeNr = 0 To DataBron.AantalVelden() - 1
-         VeldTypeLijst(Veld).AddItem DataBron.VeldNaam(VeldTypeNr)
+      For VeldTypeNr = 0 To Databron.AantalVelden() - 1
+         VeldTypeLijst(Veld).AddItem Databron.VeldNaam(VeldTypeNr)
       Next VeldTypeNr
-      VeldTypeLijst(Veld).ListIndex = VeldType(Veld)
+      VeldTypeLijst(Veld).ListIndex = Veldtype(Veld)
    Next Veld
    
-   VeldTekenLijst.Clear
-   VeldTekenLijst.AddItem "(Andere Tekens)"
-   VeldTekenLijst.AddItem "Spatie"
-   VeldTekenLijst.AddItem "Tab"
+   VeldtekenLijst.Clear
+   VeldtekenLijst.AddItem "(Andere Tekens)"
+   VeldtekenLijst.AddItem "Spatie"
+   VeldtekenLijst.AddItem "Tab"
    
-   Select Case VeldScheidTekens
+   Select Case Veldscheidingstekens
       Case " "
-         VeldTekenLijst.ListIndex = 1
+         VeldtekenLijst.ListIndex = 1
       Case vbTab
-         VeldTekenLijst.ListIndex = 2
+         VeldtekenLijst.ListIndex = 2
       Case Else
-         If Not VeldScheidTekens = vbNullString Then
-            VeldTekenLijst.ListIndex = 0
-            VeldTekenLijst.List(0) = VeldScheidTekens
+         If Not Veldscheidingstekens = vbNullString Then
+            VeldtekenLijst.ListIndex = 0
+            VeldtekenLijst.List(0) = Veldscheidingstekens
          End If
    End Select
    
@@ -328,12 +328,12 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procudure legt het geselecteerde veld type vast.
+'Deze procudure legt het geselecteerde veldtype vast.
 Private Sub VeldTypeLijst_Click(Index As Integer)
 On Error GoTo Fout
 Dim Keuze As Long
 
-   VeldType(Index) = VeldTypeLijst(Index).ListIndex
+   Veldtype(Index) = VeldTypeLijst(Index).ListIndex
    
 EindeRoutine:
    Exit Sub

@@ -65,14 +65,14 @@ Begin VB.Form VoorraadVenster
          Width           =   1095
       End
    End
-   Begin DepotBeheerderProgramma.LijstObject ArtikelenLijst 
+   Begin DepotbeheerderProgramma.LijstObject ArtikelenLijst 
       Height          =   3255
       Left            =   120
       TabIndex        =   0
       Top             =   120
       Width           =   6015
-      _ExtentX        =   9340
-      _ExtentY        =   5741
+      _extentx        =   9340
+      _extenty        =   5741
    End
 End
 Attribute VB_Name = "VoorraadVenster"
@@ -87,12 +87,13 @@ Option Explicit
 Private Sub AfdrukkenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If Beheerder() Then
       If MsgBox("Voorraad afdrukken?", vbQuestion Or vbYesNo) = vbYes Then
          DrukDataAf Voorraad
       End If
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -106,19 +107,20 @@ End Sub
 Private Sub CorrigerenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If Beheerder() Then
       ActieIsToeVoegen = False
       If Not Voorraad.AantalItems() = 0 Then
          Buffer(VrAantal) = Voorraad.Data(VrAantal, ArtikelenLijst.Selectie())
          Buffer(VrAftotaal) = Voorraad.Data(VrAftotaal, ArtikelenLijst.Selectie())
          Buffer(VrBijTotaal) = Voorraad.Data(VrBijTotaal, ArtikelenLijst.Selectie())
-         
+
          VoorraadCorrigerenVenster.Show vbModal
          Voorraad.Corrigeer ArtikelenLijst.Selectie()
          ArtikelenLijst.WerkLijstBij
       End If
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -132,8 +134,9 @@ End Sub
 Private Sub Form_Activate()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    ArtikelenLijst.WerkLijstBij
+
 EindeRoutine:
    Exit Sub
 
@@ -147,10 +150,11 @@ End Sub
 Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If KeyCode = vbKeyC And Shift = vbCtrlMask Then
       GekopieerdArtikel = Voorraad.Data(VrArtikelnr, ArtikelenLijst.Selectie())
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -164,19 +168,20 @@ End Sub
 Private Sub Form_Load()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    AfdrukkenKnop.ToolTipText = "Drukt de voorraad af."
    CorrigerenKnop.ToolTipText = "Corrigeert een artikel."
    ToevoegenKnop.ToolTipText = "Voegt een artikel toe."
    VerwijderenKnop.ToolTipText = "Verwijdert een artikel."
    WijzigenKnop.ToolTipText = "Wijzigt een artikel."
-   
-   Me.Width = DepotBeheerderVenster.Width / 1.3
-   Me.Height = DepotBeheerderVenster.Height / 1.15
+
+   Me.Width = DepotbeheerderVenster.Width / 1.3
+   Me.Height = DepotbeheerderVenster.Height / 1.15
    Me.Left = MenuVenster.Left + MenuVenster.Width + 128
    Me.Top = MenuVenster.Top
-   
-   Set ArtikelenLijst.DataBron = Voorraad
+
+   Set ArtikelenLijst.Databron = Voorraad
+
 EindeRoutine:
    Exit Sub
 
@@ -189,11 +194,12 @@ End Sub
 'Deze procedure past de objecten in dit venster aan de nieuwe afmetingen aan.
 Private Sub Form_Resize()
 On Error Resume Next
+
    ArtikelenLijst.Width = Me.ScaleWidth - 2
    ArtikelenLijst.Height = Me.ScaleHeight - 3
    KnoppenBalk.Left = Me.ScaleWidth - KnoppenBalk.Width - 1
    KnoppenBalk.Top = Me.ScaleHeight - 2
-   
+
    ArtikelenLijst.WerkLijstBij
 End Sub
 
@@ -201,12 +207,12 @@ End Sub
 Private Sub ToevoegenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If Beheerder() Then
       ActieIsToeVoegen = True
       Voorraad.StelStandaardWaardesIn
       VoorraadInvoerVenster.Show vbModal
-      
+
       If Not Buffer(VrArtikelnr) = vbNullString Then
          Voorraad.VoegItemToe
          ArtikelenLijst.Selectie = Voorraad.AantalItems() - 1
@@ -216,6 +222,7 @@ Dim Keuze As Long
          ArtikelenLijst.WerkLijstBij
       End If
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -229,13 +236,14 @@ End Sub
 Private Sub VerwijderenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If Beheerder() Then
       If MsgBox("Artikel verwijderen?", vbQuestion Or vbYesNo) = vbYes Then
          Voorraad.VerwijderItem ArtikelenLijst.Selectie()
          ArtikelenLijst.WerkLijstBij
       End If
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -249,16 +257,16 @@ End Sub
 Private Sub WijzigenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If Beheerder() Then
       If Not Voorraad.AantalItems() = 0 Then
          Buffer(VrArtikelnr) = Voorraad.Data(VrArtikelnr, ArtikelenLijst.Selectie())
          Buffer(VrNaam) = Voorraad.Data(VrNaam, ArtikelenLijst.Selectie())
          Buffer(VrStukprijs) = Voorraad.Data(VrStukprijs, ArtikelenLijst.Selectie())
-         
+
          ActieIsToeVoegen = False
          VoorraadInvoerVenster.Show vbModal
-         
+
          If Not Buffer(VrArtikelnr) = vbNullString Then
             Voorraad.WijzigItem ArtikelenLijst.Selectie()
             Voorraad.SorteerItems
@@ -267,6 +275,7 @@ Dim Keuze As Long
          End If
       End If
    End If
+
 EindeRoutine:
    Exit Sub
 

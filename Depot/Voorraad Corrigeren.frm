@@ -24,7 +24,7 @@ Begin VB.Form VoorraadCorrigerenVenster
       Top             =   120
       Width           =   1575
    End
-   Begin VB.TextBox ErAfTotaalVeld 
+   Begin VB.TextBox ErafTotaalVeld 
       Alignment       =   1  'Right Justify
       Height          =   285
       Left            =   1560
@@ -33,7 +33,7 @@ Begin VB.Form VoorraadCorrigerenVenster
       Top             =   480
       Width           =   1575
    End
-   Begin VB.TextBox ErBijTotaalVeld 
+   Begin VB.TextBox ErbijTotaalVeld 
       Alignment       =   1  'Right Justify
       Height          =   285
       Left            =   1560
@@ -48,7 +48,7 @@ Begin VB.Form VoorraadCorrigerenVenster
       Height          =   375
       Left            =   840
       TabIndex        =   3
-      Top             =   1200
+      Top             =   1320
       Width           =   1095
    End
    Begin VB.CommandButton CorrigerenKnop 
@@ -69,18 +69,18 @@ Begin VB.Form VoorraadCorrigerenVenster
       Top             =   120
       Width           =   1215
    End
-   Begin VB.Label ErAfLabel 
+   Begin VB.Label ErafLabel 
       Alignment       =   1  'Right Justify
-      Caption         =   "Er Af Totaal:"
+      Caption         =   "Eraf Totaal:"
       Height          =   255
       Left            =   240
       TabIndex        =   6
       Top             =   480
       Width           =   1215
    End
-   Begin VB.Label ErBijLabel 
+   Begin VB.Label ErbijLabel 
       Alignment       =   1  'Right Justify
-      Caption         =   "Er Bij Totaal:"
+      Caption         =   "Erbij Totaal:"
       Height          =   255
       Left            =   240
       TabIndex        =   5
@@ -103,6 +103,7 @@ Dim Keuze As Long
 
    AantalVeld.SelStart = 0
    AantalVeld.SelLength = Len(AantalVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -116,8 +117,9 @@ End Sub
 Private Sub AnnulerenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -131,12 +133,13 @@ End Sub
 Private Sub CorrigerenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    Buffer(VrAantal) = MaakGetalOp(AantalVeld.Text)
-   Buffer(VrAftotaal) = MaakGetalOp(ErAfTotaalVeld.Text)
-   Buffer(VrBijTotaal) = MaakGetalOp(ErBijTotaalVeld.Text)
-   
+   Buffer(VrAftotaal) = MaakGetalOp(ErafTotaalVeld.Text)
+   Buffer(VrBijTotaal) = MaakGetalOp(ErbijTotaalVeld.Text)
+
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -147,12 +150,13 @@ Fout:
 End Sub
 
 'Deze procedure selecteert automatisch de inhoud van het veld.
-Private Sub ErAfTotaalVeld_GotFocus()
+Private Sub ErafTotaalVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
-   ErAfTotaalVeld.SelStart = 0
-   ErAfTotaalVeld.SelLength = Len(ErAfTotaalVeld.Text)
+
+   ErafTotaalVeld.SelStart = 0
+   ErafTotaalVeld.SelLength = Len(ErafTotaalVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -163,12 +167,13 @@ Fout:
 End Sub
 
 'Deze procedure selecteert automatisch de inhoud van het veld.
-Private Sub ErBijTotaalVeld_GotFocus()
+Private Sub ErbijTotaalVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
-   ErBijTotaalVeld.SelStart = 0
-   ErBijTotaalVeld.SelLength = Len(ErBijTotaalVeld.Text)
+
+   ErbijTotaalVeld.SelStart = 0
+   ErbijTotaalVeld.SelLength = Len(ErbijTotaalVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -182,16 +187,17 @@ End Sub
 Private Sub Form_Load()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    AantalVeld.ToolTipText = "Het aantal artikelen."
    AnnulerenKnop.ToolTipText = "Sluit dit venster."
    CorrigerenKnop.ToolTipText = "Corrigeert de aantallen."
-   ErAfTotaalVeld.ToolTipText = "Het er af totaal."
-   ErBijTotaalVeld.ToolTipText = "Het er bij totaal."
+   ErafTotaalVeld.ToolTipText = "Het eraf totaal."
+   ErbijTotaalVeld.ToolTipText = "Het erbij totaal."
 
    AantalVeld.Text = Buffer(VrAantal)
-   ErAfTotaalVeld.Text = Buffer(VrAftotaal)
-   ErBijTotaalVeld.Text = Buffer(VrBijTotaal)
+   ErafTotaalVeld.Text = Buffer(VrAftotaal)
+   ErbijTotaalVeld.Text = Buffer(VrBijTotaal)
+
 EindeRoutine:
    Exit Sub
 

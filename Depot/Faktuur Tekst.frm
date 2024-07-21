@@ -1,6 +1,6 @@
 VERSION 5.00
-Begin VB.Form FaktuurTekstVenster 
-   Caption         =   "Faktuur Tekst"
+Begin VB.Form FaktuurtekstVenster 
+   Caption         =   "Faktuurtekst"
    ClientHeight    =   3615
    ClientLeft      =   60
    ClientTop       =   345
@@ -45,7 +45,7 @@ Begin VB.Form FaktuurTekstVenster
          Width           =   1095
       End
    End
-   Begin VB.TextBox FaktuurTekstVeld 
+   Begin VB.TextBox FaktuurtekstVeld 
       BeginProperty Font 
          Name            =   "Arial"
          Size            =   9.75
@@ -65,7 +65,7 @@ Begin VB.Form FaktuurTekstVenster
       Width           =   4335
    End
 End
-Attribute VB_Name = "FaktuurTekstVenster"
+Attribute VB_Name = "FaktuurtekstVenster"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -79,6 +79,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -94,15 +95,16 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    AnnulerenKnop.ToolTipText = "Sluit dit venster."
-   FaktuurTekstVeld.ToolTipText = "Deze tekst wordt op de fakturen afgedrukt."
+   FaktuurtekstVeld.ToolTipText = "Deze tekst wordt op de fakturen afgedrukt."
    WijzigenKnop.ToolTipText = "Wijzigt de faktuur tekst."
 
-   Me.Width = DepotBeheerderVenster.Width / 2
-   Me.Height = DepotBeheerderVenster.Height / 2
-   Me.Left = (DepotBeheerderVenster.Width / 2) - (Me.Width / 2)
-   Me.Top = (DepotBeheerderVenster.Height / 3) - (Me.Height / 2)
-   
-   FaktuurTekstVeld.Text = Faktuur.FaktuurTekst()
+   Me.Width = DepotbeheerderVenster.Width / 2
+   Me.Height = DepotbeheerderVenster.Height / 2
+   Me.Left = (DepotbeheerderVenster.Width / 2) - (Me.Width / 2)
+   Me.Top = (DepotbeheerderVenster.Height / 3) - (Me.Height / 2)
+
+   FaktuurtekstVeld.Text = Faktuur.FaktuurTekst()
+
 EindeRoutine:
    Exit Sub
 
@@ -115,8 +117,9 @@ End Sub
 'Deze procedure past de objecten in dit venster aan de nieuwe afmetingen aan.
 Private Sub Form_Resize()
 On Error Resume Next
-   FaktuurTekstVeld.Width = Me.ScaleWidth - 2
-   FaktuurTekstVeld.Height = Me.ScaleHeight - 3
+
+   FaktuurtekstVeld.Width = Me.ScaleWidth - 2
+   FaktuurtekstVeld.Height = Me.ScaleHeight - 3
    KnoppenBalk.Left = Me.ScaleWidth - KnoppenBalk.Width - 1
    KnoppenBalk.Top = Me.ScaleHeight - 2
 End Sub
@@ -126,8 +129,9 @@ Private Sub WijzigenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   Faktuur.FaktuurTekst = FaktuurTekstVeld.Text
+   Faktuur.FaktuurTekst = FaktuurtekstVeld.Text
    Unload Me
+
 EindeRoutine:
    Exit Sub
 

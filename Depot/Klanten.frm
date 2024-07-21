@@ -79,7 +79,7 @@ Begin VB.Form KlantenVenster
          Top             =   720
          Width           =   4455
       End
-      Begin VB.TextBox KlantNaamVeld 
+      Begin VB.TextBox KlantnaamVeld 
          Height          =   285
          Left            =   1440
          MaxLength       =   255
@@ -96,7 +96,7 @@ Begin VB.Form KlantenVenster
          Top             =   0
          Width           =   4455
       End
-      Begin VB.TextBox KlantEmailAdresVeld 
+      Begin VB.TextBox KlantEmailadresVeld 
          Height          =   285
          Left            =   1440
          MaxLength       =   255
@@ -152,8 +152,8 @@ Begin VB.Form KlantenVenster
          Top             =   0
          Width           =   1335
       End
-      Begin VB.Label EMailAdresLabel 
-         Caption         =   "E-mail Adres:"
+      Begin VB.Label EMailadresLabel 
+         Caption         =   "E-mailadres:"
          Height          =   255
          Left            =   0
          TabIndex        =   15
@@ -201,120 +201,13 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Buffer(KlNummer) = KlantnummerVeld.Text
-   Buffer(KlNaam) = KlantNaamVeld.Text
+   Buffer(KlNaam) = KlantnaamVeld.Text
    Buffer(KlAdres) = KlantAdresVeld.Text
    Buffer(KlPostcodePlaats) = KlantPostcodePlaatsVeld.Text
    Buffer(KlTelefoonNummer) = KlantTelefoonnummerVeld.Text
    Buffer(KlFaxNummer) = KlantFaxnummerVeld.Text
-   Buffer(KlEmailAdres) = KlantEmailAdresVeld.Text
-EindeRoutine:
-   Exit Sub
+   Buffer(KlEmailadres) = KlantEmailAdresVeld.Text
 
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Sub
-
-'Deze procedure werkt de klant gegevens invoer velden bij.
-Private Sub WerkVeldenBij()
-On Error GoTo Fout
-Dim Keuze As Long
-   
-   If SelectieV > Klanten.AantalItems() Then SelectieV = Klanten.AantalItems()
-   Me.Caption = "Klanten - Klant: " & SelectieV & "/" & Klanten.AantalItems()
-   
-   If SelectieV = Klanten.AantalItems() Then
-      KlantnummerVeld.Text = vbNullString
-      KlantNaamVeld.Text = vbNullString
-      KlantAdresVeld.Text = vbNullString
-      KlantPostcodePlaatsVeld.Text = vbNullString
-      KlantTelefoonnummerVeld.Text = vbNullString
-      KlantFaxnummerVeld.Text = vbNullString
-      KlantEmailAdresVeld.Text = vbNullString
-   Else
-      KlantnummerVeld.Text = Klanten.Data(KlNummer, SelectieV)
-      KlantNaamVeld.Text = Klanten.Data(KlNaam, SelectieV)
-      KlantAdresVeld.Text = Klanten.Data(KlAdres, SelectieV)
-      KlantPostcodePlaatsVeld.Text = Klanten.Data(KlPostcodePlaats, SelectieV)
-      KlantTelefoonnummerVeld.Text = Klanten.Data(KlTelefoonNummer, SelectieV)
-      KlantFaxnummerVeld.Text = Klanten.Data(KlFaxNummer, SelectieV)
-      KlantEmailAdresVeld.Text = Klanten.Data(KlEmailAdres, SelectieV)
-   End If
-   
-   HaalInvoer
-EindeRoutine:
-   Exit Sub
-
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Sub
-
-'Deze procedure drukt de klant gegevens af na bevestiging van de gebruiker.
-Private Sub AfdrukkenKnop_Click()
-On Error GoTo Fout
-Dim Keuze As Long
-   
-   If MsgBox("Klant gegevens afdrukken?", vbQuestion Or vbYesNo) = vbYes Then
-      DrukDataAf Klanten
-   End If
-EindeRoutine:
-   Exit Sub
-
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Sub
-
-'Deze procedure stelt dit venster in.
-Private Sub Form_Load()
-On Error GoTo Fout
-Dim Keuze As Long
-   
-   AfdrukkenKnop.ToolTipText = "Drukt de gegevens van alle klanten af."
-   KlantAdresVeld.ToolTipText = "Het klant adres."
-   KlantEmailAdresVeld.ToolTipText = "Het klant e-mail adres."
-   KlantFaxnummerVeld.ToolTipText = "Het klant faxnummer."
-   KlantNaamVeld.ToolTipText = "De klant naam."
-   KlantnummerVeld.ToolTipText = "Het klantnummer."
-   KlantPostcodePlaatsVeld.ToolTipText = "De klant postcode en plaats."
-   KlantTelefoonnummerVeld.ToolTipText = "Het klant telefoonnummer."
-   ToevoegenKnop.ToolTipText = "Voegt een klant toe."
-   VerwijderKnop.ToolTipText = "Verwijdert een klant."
-   VolgendeKnop.ToolTipText = "Toont de volgende klant."
-   VorigeKnop.ToolTipText = "Toont de vorige klant."
-   WijzigenKnop.ToolTipText = "Wijzigt een klant."
-      
-   Me.Left = MenuVenster.Left + MenuVenster.Width + 128
-   Me.Top = MenuVenster.Top
-   
-   SelectieV = 0
-   WerkVeldenBij
-EindeRoutine:
-   Exit Sub
-
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Sub
-
-'Deze procedure werkt de klanten lijst bij wanneer dit venster wordt gesloten.
-Private Sub Form_Unload(Cancel As Integer)
-On Error GoTo Fout
-Dim Keuze As Long
-   
-   HaalInvoer
-   
-   If Not Buffer(KlNummer) = vbNullString Then
-      If SelectieV = Klanten.AantalItems() Then Klanten.VoegItemToe
-      Klanten.WijzigItem SelectieV
-      Klanten.SorteerItems
-      Klanten.VerwijderOudeKlant
-   End If
 EindeRoutine:
    Exit Sub
 
@@ -328,6 +221,7 @@ End Sub
 Public Property Get Selectie() As Long
 On Error GoTo Fout
 Dim Keuze As Long
+
 EindeRoutine:
    Selectie = SelectieV
    Exit Property
@@ -338,13 +232,143 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Property
 
+'Deze procedure selecteert de opgegeven klant.
+Public Property Let Selectie(NieuweSelectie As Long)
+On Error GoTo Fout
+Dim Keuze As Long
+
+   SelectieV = NieuweSelectie
+   WerkVeldenBij
+
+EindeRoutine:
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure werkt de klant gegevens invoer velden bij.
+Private Sub WerkVeldenBij()
+On Error GoTo Fout
+Dim Keuze As Long
+
+   If SelectieV > Klanten.AantalItems() Then SelectieV = Klanten.AantalItems()
+   Me.Caption = "Klanten - Klant: " & SelectieV & "/" & Klanten.AantalItems()
+
+   If SelectieV = Klanten.AantalItems() Then
+      KlantnummerVeld.Text = vbNullString
+      KlantnaamVeld.Text = vbNullString
+      KlantAdresVeld.Text = vbNullString
+      KlantPostcodePlaatsVeld.Text = vbNullString
+      KlantTelefoonnummerVeld.Text = vbNullString
+      KlantFaxnummerVeld.Text = vbNullString
+      KlantEmailAdresVeld.Text = vbNullString
+   Else
+      KlantnummerVeld.Text = Klanten.Data(KlNummer, SelectieV)
+      KlantnaamVeld.Text = Klanten.Data(KlNaam, SelectieV)
+      KlantAdresVeld.Text = Klanten.Data(KlAdres, SelectieV)
+      KlantPostcodePlaatsVeld.Text = Klanten.Data(KlPostcodePlaats, SelectieV)
+      KlantTelefoonnummerVeld.Text = Klanten.Data(KlTelefoonNummer, SelectieV)
+      KlantFaxnummerVeld.Text = Klanten.Data(KlFaxNummer, SelectieV)
+      KlantEmailAdresVeld.Text = Klanten.Data(KlEmailadres, SelectieV)
+   End If
+
+   HaalInvoer
+
+EindeRoutine:
+   Exit Sub
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Sub
+
+'Deze procedure drukt de klant gegevens af na bevestiging van de gebruiker.
+Private Sub AfdrukkenKnop_Click()
+On Error GoTo Fout
+Dim Keuze As Long
+
+   If MsgBox("Klant gegevens afdrukken?", vbQuestion Or vbYesNo) = vbYes Then
+      DrukDataAf Klanten
+   End If
+
+EindeRoutine:
+   Exit Sub
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Sub
+
+'Deze procedure stelt dit venster in.
+Private Sub Form_Load()
+On Error GoTo Fout
+Dim Keuze As Long
+
+   AfdrukkenKnop.ToolTipText = "Drukt de gegevens van alle klanten af."
+   KlantAdresVeld.ToolTipText = "Het klant adres."
+   KlantEmailAdresVeld.ToolTipText = "Het klant e-mailadres."
+   KlantFaxnummerVeld.ToolTipText = "Het klant faxnummer."
+   KlantnaamVeld.ToolTipText = "De klant naam."
+   KlantnummerVeld.ToolTipText = "Het klantnummer."
+   KlantPostcodePlaatsVeld.ToolTipText = "De klant postcode en plaats."
+   KlantTelefoonnummerVeld.ToolTipText = "Het klant telefoonnummer."
+   ToevoegenKnop.ToolTipText = "Voegt een klant toe."
+   VerwijderKnop.ToolTipText = "Verwijdert een klant."
+   VolgendeKnop.ToolTipText = "Toont de volgende klant."
+   VorigeKnop.ToolTipText = "Toont de vorige klant."
+   WijzigenKnop.ToolTipText = "Wijzigt een klant."
+
+   Me.Left = MenuVenster.Left + MenuVenster.Width + 128
+   Me.Top = MenuVenster.Top
+
+   SelectieV = 0
+   WerkVeldenBij
+
+EindeRoutine:
+   Exit Sub
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Sub
+
+'Deze procedure werkt de klanten lijst bij wanneer dit venster wordt gesloten.
+Private Sub Form_Unload(Cancel As Integer)
+On Error GoTo Fout
+Dim Keuze As Long
+
+   HaalInvoer
+
+   If Not Buffer(KlNummer) = vbNullString Then
+      If SelectieV = Klanten.AantalItems() Then Klanten.VoegItemToe
+      Klanten.WijzigItem SelectieV
+      Klanten.SorteerItems
+      Klanten.VerwijderOudeKlant
+   End If
+
+EindeRoutine:
+   Exit Sub
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Sub
+
 'Deze procedure selecteert automatisch de inhoud van het veld.
 Private Sub KlantAdresVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantAdresVeld.SelStart = 0
    KlantAdresVeld.SelLength = Len(KlantAdresVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -358,8 +382,9 @@ End Sub
 Private Sub KlantAdresVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -373,9 +398,10 @@ End Sub
 Private Sub KlantEmailAdresVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantEmailAdresVeld.SelStart = 0
    KlantEmailAdresVeld.SelLength = Len(KlantEmailAdresVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -386,11 +412,12 @@ Fout:
 End Sub
 
 'Deze procedure legt de ingevoerde waarde vast.
-Private Sub KlantEmailAdresVeld_LostFocus()
+Private Sub KlantEmailadresVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -404,9 +431,10 @@ End Sub
 Private Sub KlantFaxnummerVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantFaxnummerVeld.SelStart = 0
    KlantFaxnummerVeld.SelLength = Len(KlantFaxnummerVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -420,8 +448,9 @@ End Sub
 Private Sub KlantFaxNummerVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -432,12 +461,13 @@ Fout:
 End Sub
 
 'Deze procedure selecteert automatisch de inhoud van het veld.
-Private Sub KlantNaamVeld_GotFocus()
+Private Sub KlantnaamVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
-   KlantNaamVeld.SelStart = 0
-   KlantNaamVeld.SelLength = Len(KlantNaamVeld.Text)
+
+   KlantnaamVeld.SelStart = 0
+   KlantnaamVeld.SelLength = Len(KlantnaamVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -448,11 +478,12 @@ Fout:
 End Sub
 
 'Deze procedure legt de ingevoerde waarde vast.
-Private Sub KlantNaamVeld_LostFocus()
+Private Sub KlantnaamVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -463,12 +494,13 @@ Fout:
 End Sub
 
 'Deze procedure selecteert automatisch de inhoud van het veld.
-Private Sub KlantNummerVeld_GotFocus()
+Private Sub KlantnummerVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantnummerVeld.SelStart = 0
    KlantnummerVeld.SelLength = Len(KlantnummerVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -479,11 +511,12 @@ Fout:
 End Sub
 
 'Deze procedure verwijdert ongeldige tekens uit de invoer.
-Private Sub KlantNummerVeld_KeyPress(KeyAscii As Integer)
+Private Sub KlantnummerVeld_KeyPress(KeyAscii As Integer)
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If InStr(ONGELDIGE_TEKENS, Chr$(KeyAscii)) > 0 Then KeyAscii = Empty
+
 EindeRoutine:
    Exit Sub
 
@@ -494,11 +527,12 @@ Fout:
 End Sub
 
 'Deze procedure legt de ingevoerde waarde vast.
-Private Sub KlantNummerVeld_LostFocus()
+Private Sub KlantnummerVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
 
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -512,9 +546,10 @@ End Sub
 Private Sub KlantPostcodePlaatsVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantPostcodePlaatsVeld.SelStart = 0
    KlantPostcodePlaatsVeld.SelLength = Len(KlantPostcodePlaatsVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -528,8 +563,9 @@ End Sub
 Private Sub KlantPostcodePlaatsVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -540,12 +576,13 @@ Fout:
 End Sub
 
 'Deze procedure selecteert automatisch de inhoud van het veld.
-Private Sub KlanttelefoonnummerVeld_GotFocus()
+Private Sub KlantTelefoonnummerVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantTelefoonnummerVeld.SelStart = 0
    KlantTelefoonnummerVeld.SelLength = Len(KlantTelefoonnummerVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -556,11 +593,12 @@ Fout:
 End Sub
 
 'Deze procedure legt de ingevoerde waarde vast.
-Private Sub KlantTelefoonNummerVeld_LostFocus()
+Private Sub KlantTelefoonnummerVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -570,27 +608,11 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure selecteert de opgegeven klant.
-Public Property Let Selectie(NieuweSelectie As Long)
-On Error GoTo Fout
-Dim Keuze As Long
-   
-   SelectieV = NieuweSelectie
-   WerkVeldenBij
-EindeRoutine:
-   Exit Property
-
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
 'Deze procedure voegt een nieuwe klant aan de lijst toe.
 Private Sub ToevoegenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantVelden.Enabled = False
    If Not Buffer(KlNummer) = vbNullString Then
       If SelectieV = Klanten.AantalItems() Then Klanten.VoegItemToe
@@ -600,6 +622,7 @@ Dim Keuze As Long
       SelectieV = Klanten.AantalItems()
       WerkVeldenBij
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -613,7 +636,7 @@ End Sub
 Private Sub VerwijderKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If MsgBox("Klant verwijderen?", vbQuestion Or vbYesNo) = vbYes Then
       KlantVelden.Enabled = False
       If SelectieV < Klanten.AantalItems() Then
@@ -621,6 +644,7 @@ Dim Keuze As Long
          WerkVeldenBij
       End If
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -634,7 +658,7 @@ End Sub
 Private Sub VolgendeKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantVelden.Enabled = False
    If SelectieV < Klanten.AantalItems() Then
       If Not Buffer(KlNummer) = vbNullString Then
@@ -645,6 +669,7 @@ Dim Keuze As Long
       SelectieV = SelectieV + 1
       WerkVeldenBij
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -658,7 +683,7 @@ End Sub
 Private Sub VorigeKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantVelden.Enabled = False
    If SelectieV > 0 Then
       If Not Buffer(KlNummer) = vbNullString Then
@@ -670,6 +695,7 @@ Dim Keuze As Long
       SelectieV = SelectieV - 1
       WerkVeldenBij
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -683,9 +709,10 @@ End Sub
 Private Sub WijzigenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantVelden.Enabled = True
    KlantnummerVeld.SetFocus
+
 EindeRoutine:
    Exit Sub
 

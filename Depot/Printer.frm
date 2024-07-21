@@ -115,6 +115,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -133,7 +134,7 @@ Dim Veld As Long
 
    AnnulerenKnop.ToolTipText = "Sluit dit venster."
    WijzigenKnop.ToolTipText = "Wijzigt de printer instellingen."
-   
+
    Afdrukken() = HaalBits(Klanten.Afdrukken)
    For Veld = 0 To Klanten.AantalVelden - 1
       If Veld > 0 Then
@@ -149,7 +150,7 @@ Dim Veld As Long
       KlantVeld(Veld).ToolTipText = "Geeft aan of dit veld word afgedrukt."
       KlantVeld(Veld).Value = -Afdrukken(Veld)
    Next Veld
-   
+
    Afdrukken() = HaalBits(Voorraad.Afdrukken)
    For Veld = 0 To Voorraad.AantalVelden - 1
       If Veld > 0 Then
@@ -165,10 +166,11 @@ Dim Veld As Long
       VoorraadVeld(Veld).ToolTipText = "Geeft aan of dit veld word afgedrukt."
       VoorraadVeld(Veld).Value = -Afdrukken(Veld)
    Next Veld
-   
+
    KnoppenBalk.Top = Me.ScaleHeight - 2
-   Me.Left = (DepotBeheerderVenster.Width / 2) - (Me.Width / 2)
-   Me.Top = (DepotBeheerderVenster.Height / 3) - (Me.Height / 2)
+   Me.Left = (DepotbeheerderVenster.Width / 2) - (Me.Width / 2)
+   Me.Top = (DepotbeheerderVenster.Height / 3) - (Me.Height / 2)
+
 EindeRoutine:
    Exit Sub
 
@@ -196,6 +198,7 @@ Dim Veld As Long
    Voorraad.Afdrukken = PlaatsBits(Afdrukken())
 
    Unload Me
+
 EindeRoutine:
    Exit Sub
 

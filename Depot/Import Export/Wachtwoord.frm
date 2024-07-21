@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form WachtwoordVenster 
    BorderStyle     =   1  'Fixed Single
-   Caption         =   "Beheerder Wachtwoord"
+   Caption         =   "Beheerderwachtwoord"
    ClientHeight    =   990
    ClientLeft      =   45
    ClientTop       =   330
@@ -25,7 +25,7 @@ Begin VB.Form WachtwoordVenster
       Top             =   480
       Width           =   1215
    End
-   Begin VB.TextBox BeheerderWachtwoordVeld 
+   Begin VB.TextBox BeheerderwachtwoordVeld 
       Height          =   285
       IMEMode         =   3  'DISABLE
       Left            =   120
@@ -54,6 +54,7 @@ Dim Keuze As Long
    
    VorigeMuisAanwijzer = Screen.MousePointer
    Screen.MousePointer = vbDefault
+
 EindeRoutine:
    Exit Sub
 
@@ -72,6 +73,7 @@ Dim Keuze As Long
    IngevoerdWachtwoord = ZetBitsOm(BeheerderWachtwoordVeld.Text)
    
    Unload Me
+   
 EindeRoutine:
    Exit Sub
 

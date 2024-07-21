@@ -98,7 +98,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 'Deze procedure toont het zoek venster.
 Option Explicit
-Private DataBron As Object
+Private Databron As Object
 Private Gevonden As Boolean
 
 'Deze procedure zoekt naar een item die voldoet aan de geselecteerde zoekcriteria.
@@ -108,7 +108,7 @@ Dim Keuze As Long
 Dim SelectieV As Long
 
    Screen.MousePointer = vbHourglass
-   
+
    Select Case DataBronVeld.ListIndex
       Case DbFakturen
          SelectieV = FakturenVenster.FakturenLijst.Selectie()
@@ -120,7 +120,7 @@ Dim SelectieV As Long
          SelectieV = VoorraadVenster.ArtikelenLijst.Selectie()
    End Select
 
-   SelectieV = ZoekItemIndex(DataBron, SelectieV, BronVeld.ListIndex, ZoektekstVeld.Text, (ZoekHeleVeldVeld.Value = vbChecked), (HoofdlettergevoeligVeld.Value = vbChecked), Richting, Gevonden)
+   SelectieV = ZoekItemIndex(Databron, SelectieV, BronVeld.ListIndex, ZoektekstVeld.Text, (ZoekHeleVeldVeld.Value = vbChecked), (HoofdlettergevoeligVeld.Value = vbChecked), Richting, Gevonden)
 
    If Gevonden Then
       Select Case DataBronVeld.ListIndex
@@ -144,9 +144,9 @@ Dim SelectieV As Long
             VoorraadVenster.ArtikelenLijst.BovensteItem = SelectieV
             VoorraadVenster.ArtikelenLijst.Selectie = SelectieV
       End Select
-      
+
       Me.ZOrder
-   ElseIf DataBron.AantalItems() > 0 Then
+   ElseIf Databron.AantalItems() > 0 Then
       MsgBox "Tekst niet gevonden.", vbInformation
    End If
 
@@ -166,6 +166,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Gevonden = False
+
 EindeRoutine:
    Exit Sub
 
@@ -182,23 +183,24 @@ Dim Keuze As Long
 Dim Veld As Long
 
    Gevonden = False
-   
+
    Select Case DataBronVeld.ListIndex
       Case DbFakturen
-         Set DataBron = Fakturen
+         Set Databron = Fakturen
       Case DbFaktuur
-         Set DataBron = Faktuur
+         Set Databron = Faktuur
       Case DbKlanten
-         Set DataBron = Klanten
+         Set Databron = Klanten
       Case DbVoorraad
-         Set DataBron = Voorraad
+         Set Databron = Voorraad
    End Select
-      
+
    BronVeld.Clear
-   For Veld = 0 To DataBron.AantalVelden - 1
-      BronVeld.AddItem DataBron.VeldNaam(Veld)
+   For Veld = 0 To Databron.AantalVelden - 1
+      BronVeld.AddItem Databron.VeldNaam(Veld)
    Next Veld
    BronVeld.ListIndex = 0
+
 EindeRoutine:
    Exit Sub
 
@@ -220,12 +222,13 @@ Dim Keuze As Long
    ZoekHeleVeldVeld.ToolTipText = "Geeft aan of het hele veld overeen moet komen met de zoektekst."
    ZoektekstVeld.ToolTipText = "De te zoeken tekst."
    ZoekVooruitKnop.ToolTipText = "Zoekt vooruit."
-   
+
    Me.Left = MenuVenster.Left + MenuVenster.Width + 128
    Me.Top = MenuVenster.Top
-   
+
    DataBronVeld.ListIndex = DbFakturen
    Gevonden = False
+
 EindeRoutine:
    Exit Sub
 
@@ -241,6 +244,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Gevonden = False
+
 EindeRoutine:
    Exit Sub
 
@@ -256,6 +260,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Zoek ZrAchteruit
+
 EindeRoutine:
    Exit Sub
 
@@ -271,6 +276,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Gevonden = False
+
 EindeRoutine:
    Exit Sub
 
@@ -286,6 +292,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Gevonden = False
+
 EindeRoutine:
    Exit Sub
 
@@ -302,6 +309,7 @@ Dim Keuze As Long
 
    ZoektekstVeld.SelStart = 0
    ZoektekstVeld.SelLength = Len(ZoektekstVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -317,6 +325,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Zoek ZrVooruit
+
 EindeRoutine:
    Exit Sub
 

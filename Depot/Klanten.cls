@@ -11,18 +11,18 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'Deze module bevat het klanten object.
+'Deze module bevat het klantenobject.
 Option Explicit
 
-'Deze opsomming definieert de beschikbare klanten velden.
+'Deze opsomming definieert de beschikbare klantenvelden.
 Public Enum KlantenE
-   KlNummer             'Definieert een klant nummer.
-   KlNaam               'Definieert een klant naam.
+   KlNummer             'Definieert een klantnummer.
+   KlNaam               'Definieert een klantnaam.
    KlAdres              'Definieert een klant adres.
    KlPostcodePlaats     'Definieert een klant postcode en plaatsnaam.
-   KlTelefoonNummer     'Definieert een klant telefoonnummer.
-   KlFaxNummer          'Definieert een klant faxnummer.
-   KlEmailAdres         'Definieert een klant e-mail adres.
+   KlTelefoonnummer     'Definieert een klant telefoonnummer.
+   KlFaxnummer          'Definieert een klant faxnummer.
+   KlEmailadres         'Definieert een klant e-mailadres.
 End Enum
 
 Private AantalItemsV As Long      'Bevat het aantal klanten in de lijst.
@@ -30,7 +30,99 @@ Private AfdrukkenV As Byte        'Geeft aan welke velden worden afgedrukt.
 Private DataV() As String         'Bevat de velden met gegevens.
 Private LeesFout As Boolean       'Geeft aan of er een fout is opgetreden tijdens het lezen van het klanten bestand.
 
-'Deze procedure maakt de klant gegevens op.
+'Deze procedure stuurt het aantal klanten terug.
+Public Property Get AantalItems() As Long
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   AantalItems = AantalItemsV
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt het aantal velden voor dit object terug.
+Public Property Get AantalVelden() As Long
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   AantalVelden = 7
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt welke velden worden afgedrukt terug.
+Public Property Get Afdrukken() As Byte
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   Afdrukken = AfdrukkenV
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze eigenschap procedure legt welke velden worden afgedrukt vast.
+Public Property Let Afdrukken(NieuwAfdrukken As Byte)
+On Error GoTo Fout
+Dim Keuze As Long
+
+   AfdrukkenV = NieuwAfdrukken
+
+EindeRoutine:
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt de gegevens van het opgegeven veld van de opgegeven klant terug.
+Public Property Get Data(Veld As Long, Klant As Long) As String
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   Data = DataV(Veld, Klant)
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure legt de gegevens van het opgegeven veld van de opgegeven klant vast.
+Public Property Let Data(Veld As Long, Klant As Long, NieuweData As String)
+On Error GoTo Fout
+Dim Keuze As Long
+
+   DataV(Veld, Klant) = NieuweData
+
+EindeRoutine:
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure maakt de klantgegevens op.
 Public Sub MaakItemsOp()
 On Error GoTo Fout
 Dim Keuze As Long
@@ -42,22 +134,22 @@ Dim Klant As Long
       DataV(KlNaam, Klant) = Trim$(DataV(KlNaam, Klant))
       DataV(KlAdres, Klant) = Trim$(DataV(KlAdres, Klant))
       DataV(KlPostcodePlaats, Klant) = Trim$(DataV(KlPostcodePlaats, Klant))
-      DataV(KlTelefoonNummer, Klant) = Trim$(DataV(KlTelefoonNummer, Klant))
-      DataV(KlFaxNummer, Klant) = Trim$(DataV(KlFaxNummer, Klant))
-      DataV(KlEmailAdres, Klant) = Trim$(DataV(KlEmailAdres, Klant))
+      DataV(KlTelefoonnummer, Klant) = Trim$(DataV(KlTelefoonnummer, Klant))
+      DataV(KlFaxnummer, Klant) = Trim$(DataV(KlFaxnummer, Klant))
+      DataV(KlEmailadres, Klant) = Trim$(DataV(KlEmailadres, Klant))
    Next Klant
 
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure opent de klanten lijst.
+'Deze procedure opent de klantenlijst.
 Public Sub OpenGegevens()
 On Error GoTo Fout
 Dim ActiefBestand As String
@@ -81,11 +173,11 @@ Dim Veld As Long
          Next Veld
       Loop
    Close BestandH
-   
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
@@ -93,23 +185,24 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure maakt de klanten lijst leeg.
+'Deze procedure maakt de klantenlijst leeg.
 Public Sub ResetGegevens()
 On Error GoTo Fout
 Dim Keuze As Long
 
    AantalItemsV = 0
    ReDim DataV(0 To 6, 0 To AantalItemsV) As String
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure slaat de klanten lijst op.
+'Deze procedure slaat de klantenlijst op.
 Public Sub SlaGegevensOp()
 On Error GoTo Fout
 Dim ActiefBestand As String
@@ -126,7 +219,7 @@ Dim Veld As Long
    If LeesFout Then
       Afbreken = BevestigAfbrekenNaLeesFout(ActiefBestand)
    End If
-   
+
    If Not Afbreken Then
       Screen.MousePointer = vbHourglass
       BestandH = FreeFile()
@@ -138,11 +231,11 @@ Dim Veld As Long
          Next Klant
       Close BestandH
    End If
-   
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -156,7 +249,7 @@ Dim AndereKlant As Long
 Dim Keuze As Long
 Dim Klant As Long
 Dim Veld As Long
- 
+
    Screen.MousePointer = vbHourglass
    For Klant = 0 To AantalItemsV - 1
       For AndereKlant = 0 To AantalItemsV - 1
@@ -169,38 +262,158 @@ Dim Veld As Long
          End If
       Next AndereKlant
    Next Klant
-   
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure maakt de invoer buffer leeg.
+'Deze procedure maakt de invoerbuffer leeg.
 Public Sub StelStandaardWaardesIn()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    Erase Buffer
-   
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
+
+'Deze procedure stuurt de totale breedte van alle velden terug.
+Public Property Get TotaleVeldBreedte() As Long
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   TotaleVeldBreedte = 9
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt de breedte van het opgegeven veld in verhouding tot de andere velden terug.
+Public Property Get VeldBreedte(Veld As Long) As Long
+On Error GoTo Fout
+Dim Breedte As Long
+Dim Keuze As Long
+
+   Select Case Veld
+      Case KlNummer
+         Breedte = 1
+      Case KlNaam
+         Breedte = 2
+      Case KlAdres
+         Breedte = 1
+      Case KlPostcodePlaats
+         Breedte = 1
+      Case KlTelefoonnummer
+         Breedte = 1
+      Case KlFaxnummer
+         Breedte = 1
+      Case KlEmailadres
+         Breedte = 2
+      Case Else
+         Breedte = 0
+   End Select
+
+EindeRoutine:
+   VeldBreedte = Breedte
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt de naam van het opgegeven veld terug.
+Public Property Get VeldNaam(Veld As Long) As String
+On Error GoTo Fout
+Dim Keuze As Long
+Dim Naam As String
+
+   Select Case Veld
+      Case KlNummer
+         Naam = "Nummer"
+      Case KlNaam
+         Naam = "Naam"
+      Case KlAdres
+         Naam = "Adres"
+      Case KlPostcodePlaats
+         Naam = "Postcode/Plaats"
+      Case KlTelefoonnummer
+         Naam = "Telefoonnummer"
+      Case KlFaxnummer
+         Naam = "Faxnummer"
+      Case KlEmailadres
+         Naam = "E-mailadres"
+      Case Else
+         Naam = vbNullString
+   End Select
+
+EindeRoutine:
+   VeldNaam = Naam
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt terug of het opgegeven veld rechtsuitgelijnd wordt.
+Public Property Get VeldRechtsUitlijnen(Veld As Long) As Boolean
+On Error GoTo Fout
+Dim Keuze As Long
+Dim RechtsUitlijnen As Boolean
+
+   Select Case Veld
+      Case KlNummer
+         RechtsUitlijnen = True
+      Case KlNaam
+         RechtsUitlijnen = False
+      Case KlAdres
+         RechtsUitlijnen = False
+      Case KlPostcodePlaats
+         RechtsUitlijnen = False
+      Case KlTelefoonnummer
+         RechtsUitlijnen = False
+      Case KlFaxnummer
+         RechtsUitlijnen = False
+      Case KlEmailadres
+         RechtsUitlijnen = False
+      Case Else
+         RechtsUitlijnen = False
+   End Select
+
+EindeRoutine:
+   VeldRechtsUitlijnen = RechtsUitlijnen
+   Exit Property
+
+Fout:
+   LeesFout = True
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
 
 'Deze procedure verwijdert de opgegeven klant uit de lijst.
 Public Sub VerwijderItem(Klant As Long)
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If Not AantalItemsV = 0 Then
       VerplaatsItem DataV(), Klant, AantalItemsV - 1
       AantalItemsV = AantalItemsV - 1
@@ -208,7 +421,7 @@ Dim Keuze As Long
 
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -247,7 +460,7 @@ Dim Klant As Long
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -275,7 +488,7 @@ Dim Klant As Long
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -286,13 +499,13 @@ End Sub
 Public Sub VoegItemToe()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    AantalItemsV = AantalItemsV + 1
    ReDim Preserve DataV(0 To 6, 0 To AantalItemsV) As String
 
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -303,239 +516,36 @@ End Sub
 Public Sub WijzigItem(Klant As Long)
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    DataV(KlNummer, Klant) = Buffer(KlNummer)
    DataV(KlNaam, Klant) = Buffer(KlNaam)
    DataV(KlAdres, Klant) = Buffer(KlAdres)
    DataV(KlPostcodePlaats, Klant) = Buffer(KlPostcodePlaats)
-   DataV(KlTelefoonNummer, Klant) = Buffer(KlTelefoonNummer)
-   DataV(KlFaxNummer, Klant) = Buffer(KlFaxNummer)
-   DataV(KlEmailAdres, Klant) = Buffer(KlEmailAdres)
+   DataV(KlTelefoonnummer, Klant) = Buffer(KlTelefoonnummer)
+   DataV(KlFaxnummer, Klant) = Buffer(KlFaxnummer)
+   DataV(KlEmailadres, Klant) = Buffer(KlEmailadres)
 
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure stuurt het aantal klanten terug.
-Public Property Get AantalItems() As Long
-On Error GoTo Fout
-Dim Keuze As Long
-
-EindeRoutine:
-   AantalItems = AantalItemsV
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt het aantal velden voor dit object terug.
-Public Property Get AantalVelden() As Long
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   AantalVelden = 7
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt welke velden worden afgedrukt terug.
-Public Property Get Afdrukken() As Byte
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   Afdrukken = AfdrukkenV
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze eigenschap procedure legt welke velden worden afgedrukt vast.
-Public Property Let Afdrukken(NieuwAfdrukken As Byte)
-On Error GoTo Fout
-Dim Keuze As Long
-   AfdrukkenV = NieuwAfdrukken
-EindeRoutine:
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt de gegevens van het opgegeven veld van de opgegeven klant terug.
-Public Property Get Data(Veld As Long, Klant As Long) As String
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   Data = DataV(Veld, Klant)
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure legt de gegevens van het opgegeven veld van de opgegeven klant vast.
-Public Property Let Data(Veld As Long, Klant As Long, NieuweData As String)
-On Error GoTo Fout
-Dim Keuze As Long
-   DataV(Veld, Klant) = NieuweData
-EindeRoutine:
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt de totale breedte van alle velden terug.
-Public Property Get TotaleVeldBreedte() As Long
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   TotaleVeldBreedte = 9
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt de breedte van het opgegeven veld in verhouding tot de andere velden terug.
-Public Property Get VeldBreedte(Veld As Long) As Long
-On Error GoTo Fout
-Dim Breedte As Long
-Dim Keuze As Long
-
-   Select Case Veld
-      Case KlNummer
-         Breedte = 1
-      Case KlNaam
-         Breedte = 2
-      Case KlAdres
-         Breedte = 1
-      Case KlPostcodePlaats
-         Breedte = 1
-      Case KlTelefoonNummer
-         Breedte = 1
-      Case KlFaxNummer
-         Breedte = 1
-      Case KlEmailAdres
-         Breedte = 2
-      Case Else
-         Breedte = 0
-   End Select
-
-EindeRoutine:
-   VeldBreedte = Breedte
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt de naam van het opgegeven veld terug.
-Public Property Get VeldNaam(Veld As Long) As String
-On Error GoTo Fout
-Dim Keuze As Long
-Dim Naam As String
-
-   Select Case Veld
-      Case KlNummer
-         Naam = "Nummer"
-      Case KlNaam
-         Naam = "Naam"
-      Case KlAdres
-         Naam = "Adres"
-      Case KlPostcodePlaats
-         Naam = "Postcode/Plaats"
-      Case KlTelefoonNummer
-         Naam = "Telefoon Nummer"
-      Case KlFaxNummer
-         Naam = "Fax Nummer"
-      Case KlEmailAdres
-         Naam = "E-mail Adres"
-      Case Else
-         Naam = vbNullString
-   End Select
-   
-EindeRoutine:
-   VeldNaam = Naam
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt terug of het opgegeven veld rechtsuitgelijnd wordt.
-Public Property Get VeldRechtsUitlijnen(Veld As Long) As Boolean
-On Error GoTo Fout
-Dim Keuze As Long
-Dim RechtsUitlijnen As Boolean
-
-   Select Case Veld
-      Case KlNummer
-         RechtsUitlijnen = True
-      Case KlNaam
-         RechtsUitlijnen = False
-      Case KlAdres
-         RechtsUitlijnen = False
-      Case KlPostcodePlaats
-         RechtsUitlijnen = False
-      Case KlTelefoonNummer
-         RechtsUitlijnen = False
-      Case KlFaxNummer
-         RechtsUitlijnen = False
-      Case KlEmailAdres
-         RechtsUitlijnen = False
-      Case Else
-         RechtsUitlijnen = False
-   End Select
-   
-EindeRoutine:
-   VeldRechtsUitlijnen = RechtsUitlijnen
-   Exit Property
-   
-Fout:
-   LeesFout = True
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
 'Deze procedure stelt dit object in.
 Private Sub Class_Initialize()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    AantalItemsV = 0
    LeesFout = False
    ReDim DataV(0 To 6, 0 To AantalItemsV) As String
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    If Keuze = vbIgnore Then Resume EindeRoutine

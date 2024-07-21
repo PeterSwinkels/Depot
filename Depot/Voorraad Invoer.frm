@@ -15,7 +15,7 @@ Begin VB.Form VoorraadInvoerVenster
    ScaleWidth      =   38.125
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
-   Begin VB.TextBox AantalErAfVeld 
+   Begin VB.TextBox AantalErafVeld 
       Alignment       =   1  'Right Justify
       Height          =   285
       Left            =   2280
@@ -24,7 +24,7 @@ Begin VB.Form VoorraadInvoerVenster
       Top             =   840
       Width           =   2175
    End
-   Begin VB.TextBox AantalErBijVeld 
+   Begin VB.TextBox AantalErbijVeld 
       Alignment       =   1  'Right Justify
       Height          =   285
       Left            =   2280
@@ -76,9 +76,9 @@ Begin VB.Form VoorraadInvoerVenster
       Top             =   120
       Width           =   2175
    End
-   Begin VB.Label AantalErAfLabel 
+   Begin VB.Label AantalErafLabel 
       Alignment       =   1  'Right Justify
-      Caption         =   "Aantal Er Af:"
+      Caption         =   "Aantal Eraf:"
       Height          =   255
       Left            =   240
       TabIndex        =   11
@@ -96,7 +96,7 @@ Begin VB.Form VoorraadInvoerVenster
    End
    Begin VB.Label AantalErBijLabel 
       Alignment       =   1  'Right Justify
-      Caption         =   "Aantal Er Bij:"
+      Caption         =   "Aantal Erbij:"
       Height          =   255
       Left            =   240
       TabIndex        =   9
@@ -137,6 +137,7 @@ Dim Keuze As Long
 
    AantalErAfVeld.SelStart = 0
    AantalErAfVeld.SelLength = Len(AantalErAfVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -150,9 +151,10 @@ End Sub
 Private Sub AantalErBijVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    AantalErBijVeld.SelStart = 0
    AantalErBijVeld.SelLength = Len(AantalErBijVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -166,14 +168,15 @@ End Sub
 Private Sub ActieKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    Buffer(VrArtikelnr) = UCase$(ArtikelnrVeld.Text)
    Buffer(VrNaam) = ArtikelNaamVeld.Text
    Buffer(VrAftotaal) = MaakGetalOp(AantalErAfVeld.Text)
    Buffer(VrBijTotaal) = MaakGetalOp(AantalErBijVeld.Text)
    Buffer(VrStukprijs) = StukprijsVeld.Text
-   
+
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -187,9 +190,10 @@ End Sub
 Private Sub AnnulerenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    Erase Buffer
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -203,9 +207,10 @@ End Sub
 Private Sub ArtikelNaamVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    ArtikelNaamVeld.SelStart = 0
    ArtikelNaamVeld.SelLength = Len(ArtikelNaamVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -219,9 +224,10 @@ End Sub
 Private Sub ArtikelnrVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    ArtikelnrVeld.SelStart = 0
    ArtikelnrVeld.SelLength = Len(ArtikelnrVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -235,18 +241,19 @@ End Sub
 Private Sub Form_Load()
 On Error GoTo Fout
 Dim Keuze As Long
- 
+
    ArtikelnrVeld.Text = Buffer(VrArtikelnr)
    ArtikelNaamVeld.Text = Buffer(VrNaam)
    AantalErAfVeld.Text = "0"
    AantalErBijVeld.Text = "0"
    StukprijsVeld.Text = Buffer(VrStukprijs)
-   
+
    If ActieIsToeVoegen Then
       ActieKnop.Caption = "&Toevoegen"
    Else
       ActieKnop.Caption = "&Wijzigen"
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -260,9 +267,10 @@ End Sub
 Private Sub StukPrijsVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    StukprijsVeld.SelStart = 0
    StukprijsVeld.SelLength = Len(StukprijsVeld.Text)
+
 EindeRoutine:
    Exit Sub
 

@@ -11,40 +11,133 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'Deze module bevat het voorraad object.
+'Deze module bevat het voorraadobject.
 Option Explicit
 
-'Deze opsomming definieert de beschikbare voorraad velden.
+'Deze opsomming definieert de beschikbare voorraadvelden.
 Public Enum VoorraadE
-   VrArtikelnr           'Definieert een voorraad artikel nummer.
-   VrNaam                'Definieert een voorraad artikel naam
-   VrAantal              'Definieert een voorraad artikel aantal.
-   VrAftotaal            'Definieert een voorraad artitkel er af totaal.
-   VrBijTotaal           'Definieert een voorraad artitkel er bij totaal.
-   VrStukprijs           'Definieert een voorraad artikel stukprijs.
+   VrArtikelnr           'Definieert een voorraad artikelnummer.
+   VrNaam                'Definieert een voorraad artikelnaam
+   VrAantal              'Definieert een voorraad artikelaantal.
+   VrAftotaal            'Definieert een voorraad artikel eraf totaal.
+   VrBijTotaal           'Definieert een voorraad artikel erbij totaal.
+   VrStukprijs           'Definieert een voorraad artikelstukprijs.
 End Enum
 
-Private AantalItemsV As Long      'Bevat het aantal artikelen in de vooraad lijst.
+Private AantalItemsV As Long      'Bevat het aantal artikelen in de vooraadlijst.
 Private AfdrukkenV As Byte        'Geeft aan welke velden worden afgedrukt.
 Private DataV() As String         'Bevat de velden met gegevens.
-Private LeesFout As Boolean       'Geeft aan of er een fout is opgetreden tijdens het lezen van het voorraad bestand.
+Private LeesFout As Boolean       'Geeft aan of er een fout is opgetreden tijdens het lezen van het voorraadbestand.
 
-'Deze procedure corrigeert de opgegeven artikel gegevens.
+'Deze procedure stuurt het aantal artikelen in de voorraad terug.
+Public Property Get AantalItems() As Long
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   AantalItems = AantalItemsV
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt het aantal velden voor dit object terug.
+Public Property Get AantalVelden() As Long
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   AantalVelden = 6
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt welke velden worden afgedrukt terug.
+Public Property Get Afdrukken() As Byte
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   Afdrukken = AfdrukkenV
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze eigenschap procedure legt welke velden worden afgedrukt vast.
+Public Property Let Afdrukken(NieuwAfdrukken As Byte)
+On Error GoTo Fout
+Dim Keuze As Long
+
+   AfdrukkenV = NieuwAfdrukken
+
+EindeRoutine:
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure corrigeert de opgegeven artikelgegevens.
 Public Sub Corrigeer(Artikel As Long)
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    DataV(VrAantal, Artikel) = MaakGetalOp(Buffer(VrAantal))
    DataV(VrAftotaal, Artikel) = MaakGetalOp(Buffer(VrAftotaal))
    DataV(VrBijTotaal, Artikel) = MaakGetalOp(Buffer(VrBijTotaal))
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
+
+'Deze procedure stuurt de gegevens van het opgegeven veld van het opgegeven artikel terug.
+Public Property Get Data(Veld As Long, Artikel As Long) As String
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   Data = DataV(Veld, Artikel)
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure legt de gegevens van het opgegeven veld van het opgegeven artikel vast.
+Public Property Let Data(Veld As Long, Artikel As Long, NieuweData As String)
+On Error GoTo Fout
+Dim Keuze As Long
+
+   DataV(Veld, Artikel) = NieuweData
+
+EindeRoutine:
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
 
 'Deze procedure maakt artikel gegevens op.
 Public Sub MaakItemsOp()
@@ -65,14 +158,14 @@ Dim Keuze As Long
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure opent de voorraad lijst.
+'Deze procedure opent de voorraadlijst.
 Public Sub OpenGegevens()
 On Error GoTo Fout
 Dim ActiefBestand As String
@@ -96,11 +189,11 @@ Dim Veld As Long
          Next Veld
       Loop
    Close BestandH
-   
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    LeesFout = True
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
@@ -108,7 +201,7 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure maakt de voorraad lijst leeg.
+'Deze procedure maakt de voorraadlijst leeg.
 Public Sub ResetGegevens()
 On Error GoTo Fout
 Dim Keuze As Long
@@ -118,14 +211,14 @@ Dim Keuze As Long
 
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure slaat voorraad lijst op.
+'Deze procedure slaat voorraadlijst op.
 Public Sub SlaGegevensOp()
 On Error GoTo Fout
 Dim ActiefBestand As String
@@ -142,7 +235,7 @@ Dim Veld As Long
    If LeesFout Then
       Afbreken = BevestigAfbrekenNaLeesFout(ActiefBestand)
    End If
-   
+
    If Not Afbreken Then
      Screen.MousePointer = vbHourglass
      SetAttr ".\Data\Voorraad.dat", vbNormal
@@ -157,25 +250,25 @@ Dim Veld As Long
      Close BestandH
      SetAttr ".\Data\Voorraad.dat", vbHidden Or vbReadOnly Or vbSystem
    End If
-   
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure sorteert de voorraad artikelen op artikel nummer.
+'Deze procedure sorteert de voorraadartikelen op artikelnummer.
 Public Sub SorteerItems()
 On Error GoTo Fout
 Dim AnderArtikel As Long
 Dim Artikel As Long
 Dim Keuze As Long
 Dim Veld As Long
-  
+
    Screen.MousePointer = vbHourglass
    For Artikel = 0 To AantalItemsV - 1
       For AnderArtikel = 0 To AantalItemsV - 1
@@ -188,22 +281,22 @@ Dim Veld As Long
          End If
       Next AnderArtikel
    Next Artikel
-   
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure plaatst de standaard waardes in de invoer buffer.
+'Deze procedure plaatst de standaard waardes in de invoerbuffer.
 Public Sub StelStandaardWaardesIn()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    Buffer(VrArtikelnr) = vbNullString
    Buffer(VrNaam) = vbNullString
    Buffer(VrAantal) = "0"
@@ -213,18 +306,132 @@ Dim Keuze As Long
 
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure verwijdert het opgegeven artikel uit de voorraad lijst.
+'Deze procedure stuurt de totale breedte van alle velden terug.
+Public Property Get TotaleVeldBreedte() As Long
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   TotaleVeldBreedte = 7
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze eigenschap procedure stuurt terug hoeveel van de totale veld breedte een veld van het opgegeven veld type in beslag neemt.
+Public Property Get VeldBreedte(Veld As Long) As Long
+On Error GoTo Fout
+Dim Breedte As Long
+Dim Keuze As Long
+
+   Select Case Veld
+      Case VrArtikelnr
+         Breedte = 1
+      Case VrNaam
+         Breedte = 2
+      Case VrAantal
+         Breedte = 1
+      Case VrAftotaal
+         Breedte = 1
+      Case VrBijTotaal
+         Breedte = 1
+      Case VrStukprijs
+         Breedte = 1
+      Case Else
+         Breedte = 0
+   End Select
+
+EindeRoutine:
+   VeldBreedte = Breedte
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt de naam van het opgegeven veld terug.
+Public Property Get VeldNaam(Veld As Long) As String
+On Error GoTo Fout
+Dim Keuze As Long
+Dim Naam As String
+
+   Select Case Veld
+      Case VrArtikelnr
+         Naam = "Artikelnr."
+      Case VrNaam
+         Naam = "Artikel"
+      Case VrAantal
+         Naam = "Aantal"
+      Case VrAftotaal
+         Naam = "Eraf Totaal"
+      Case VrBijTotaal
+         Naam = "Erbij Totaal"
+      Case VrStukprijs
+         Naam = "Stukprijs"
+      Case Else
+         Naam = vbNullString
+   End Select
+
+EindeRoutine:
+   VeldNaam = Naam
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze eigenschap procedure geeft aan of gegevens in het opgegeven veld type rechts uitgelijnd moeten worden.
+Public Property Get VeldRechtsUitlijnen(Veld As Long) As Boolean
+On Error GoTo Fout
+Dim Keuze As Long
+Dim RechtsUitlijnen As Boolean
+
+   Select Case Veld
+      Case VrArtikelnr
+         RechtsUitlijnen = False
+      Case VrNaam
+         RechtsUitlijnen = False
+      Case VrAantal
+         RechtsUitlijnen = True
+      Case VrAftotaal
+         RechtsUitlijnen = True
+      Case VrBijTotaal
+         RechtsUitlijnen = True
+      Case VrStukprijs
+         RechtsUitlijnen = True
+      Case Else
+         RechtsUitlijnen = False
+   End Select
+
+EindeRoutine:
+   VeldRechtsUitlijnen = RechtsUitlijnen
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure verwijdert het opgegeven artikel uit de voorraadlijst.
 Public Sub VerwijderItem(Artikel As Long)
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If Not AantalItemsV = 0 Then
       DataV(VrAantal, Artikel) = "0"
       DataV(VrAftotaal, Artikel) = "0"
@@ -235,7 +442,7 @@ Dim Keuze As Long
 
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -270,11 +477,11 @@ Dim Keuze As Long
             End If
          Loop
    End Select
-    
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -302,24 +509,24 @@ Dim Keuze As Long
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure voegt een artikel toe aan de vooraad lijst.
+'Deze procedure voegt een artikel toe aan de vooraadlijst.
 Public Sub VoegItemToe()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    AantalItemsV = AantalItemsV + 1
    ReDim Preserve DataV(0 To 5, 0 To AantalItemsV) As String
 
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -330,7 +537,7 @@ End Sub
 Public Sub WijzigItem(Artikel As Long)
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    DataV(VrArtikelnr, Artikel) = Buffer(VrArtikelnr)
    DataV(VrNaam, Artikel) = Buffer(VrNaam)
    DataV(VrStukprijs, Artikel) = RondAf(Buffer(VrStukprijs))
@@ -346,213 +553,12 @@ Dim Keuze As Long
 
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
-
-'Deze procedure stuurt het aantal artikelen in de voorraad terug.
-Public Property Get AantalItems() As Long
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   AantalItems = AantalItemsV
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt het aantal velden voor dit object terug.
-Public Property Get AantalVelden() As Long
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   AantalVelden = 6
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt welke velden worden afgedrukt terug.
-Public Property Get Afdrukken() As Byte
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   Afdrukken = AfdrukkenV
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze eigenschap procedure legt welke velden worden afgedrukt vast.
-Public Property Let Afdrukken(NieuwAfdrukken As Byte)
-On Error GoTo Fout
-Dim Keuze As Long
-
-   AfdrukkenV = NieuwAfdrukken
-
-EindeRoutine:
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt de gegevens van het opgegeven veld van het opgegeven artikel terug.
-Public Property Get Data(Veld As Long, Artikel As Long) As String
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   Data = DataV(Veld, Artikel)
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure legt de gegevens van het opgegeven veld van het opgegeven artikel vast.
-Public Property Let Data(Veld As Long, Artikel As Long, NieuweData As String)
-On Error GoTo Fout
-Dim Keuze As Long
-
-   DataV(Veld, Artikel) = NieuweData
-   
-EindeRoutine:
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt de totale breedte van alle velden terug.
-Public Property Get TotaleVeldBreedte() As Long
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   TotaleVeldBreedte = 7
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze eigenschap procedure stuurt terug hoeveel van de totale veld breedte een veld van het opgegeven veld type in beslag neemt.
-Public Property Get VeldBreedte(Veld As Long) As Long
-On Error GoTo Fout
-Dim Breedte As Long
-Dim Keuze As Long
-
-   Select Case Veld
-      Case VrArtikelnr
-         Breedte = 1
-      Case VrNaam
-         Breedte = 2
-      Case VrAantal
-         Breedte = 1
-      Case VrAftotaal
-         Breedte = 1
-      Case VrBijTotaal
-         Breedte = 1
-      Case VrStukprijs
-         Breedte = 1
-      Case Else
-         Breedte = 0
-   End Select
-
-EindeRoutine:
-   VeldBreedte = Breedte
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt de naam van het opgegeven veld terug.
-Public Property Get VeldNaam(Veld As Long) As String
-On Error GoTo Fout
-Dim Keuze As Long
-Dim Naam As String
-
-   Select Case Veld
-      Case VrArtikelnr
-         Naam = "Artikelnr."
-      Case VrNaam
-         Naam = "Artikel"
-      Case VrAantal
-         Naam = "Aantal"
-      Case VrAftotaal
-         Naam = "Er Af Totaal"
-      Case VrBijTotaal
-         Naam = "Er Bij Totaal"
-      Case VrStukprijs
-         Naam = "Stukprijs"
-      Case Else
-         Naam = vbNullString
-   End Select
-
-EindeRoutine:
-   VeldNaam = Naam
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze eigenschap procedure geeft aan of gegevens in het opgegeven veld type rechts uitgelijnd moeten worden.
-Public Property Get VeldRechtsUitlijnen(Veld As Long) As Boolean
-On Error GoTo Fout
-Dim Keuze As Long
-Dim RechtsUitlijnen As Boolean
-
-   Select Case Veld
-      Case VrArtikelnr
-         RechtsUitlijnen = False
-      Case VrNaam
-         RechtsUitlijnen = False
-      Case VrAantal
-         RechtsUitlijnen = True
-      Case VrAftotaal
-         RechtsUitlijnen = True
-      Case VrBijTotaal
-         RechtsUitlijnen = True
-      Case VrStukprijs
-         RechtsUitlijnen = True
-      Case Else
-         RechtsUitlijnen = False
-   End Select
-
-EindeRoutine:
-   VeldRechtsUitlijnen = RechtsUitlijnen
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
 
 'Deze procedure stelt dit object in.
 Private Sub Class_Initialize()
@@ -562,10 +568,10 @@ Dim Keuze As Long
    AantalItemsV = 0
    LeesFout = False
    ReDim DataV(0 To 5, 0 To AantalItemsV) As String
-   
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine

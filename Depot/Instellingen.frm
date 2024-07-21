@@ -31,8 +31,8 @@ Begin VB.Form InstellingenVenster
       Top             =   4560
       Width           =   1455
    End
-   Begin VB.CommandButton FaktuurTekstKnop 
-      Caption         =   "&Faktuur Tekst"
+   Begin VB.CommandButton FaktuurtekstKnop 
+      Caption         =   "&Faktuurtekst"
       Height          =   375
       Left            =   120
       TabIndex        =   10
@@ -225,48 +225,48 @@ Begin VB.Form InstellingenVenster
       Top             =   120
       Width           =   975
    End
-   Begin VB.Label FaktuurnummerTekstLabel 
-      Caption         =   "Faktuurnummer Tekst:"
+   Begin VB.Label FaktuurnummertekstLabel 
+      Caption         =   "Faktuurnummertekst:"
       Height          =   240
       Left            =   120
       TabIndex        =   19
       Top             =   2400
       Width           =   2400
    End
-   Begin VB.Label FaktuurnummerOpmaakLabel 
-      Caption         =   "Faktuurnummer Opmaak:"
+   Begin VB.Label FaktuurnummeropmaakLabel 
+      Caption         =   "Faktuurnummeropmaak:"
       Height          =   240
       Left            =   120
       TabIndex        =   18
       Top             =   2040
       Width           =   2400
    End
-   Begin VB.Label DatumOpmaakLabel 
-      Caption         =   "Datum Opmaak:"
+   Begin VB.Label DatumopmaakLabel 
+      Caption         =   "Datumopmaak:"
       Height          =   240
       Left            =   120
       TabIndex        =   17
       Top             =   1320
       Width           =   2400
    End
-   Begin VB.Label NieuwBeheerderWachtwoord 
-      Caption         =   "Nieuw beheerder wachtwoord:"
+   Begin VB.Label NieuwBeheerderwachtwoordLabel 
+      Caption         =   "Nieuw beheerderwachtwoord:"
       Height          =   240
       Left            =   120
       TabIndex        =   16
       Top             =   720
       Width           =   2400
    End
-   Begin VB.Label HuidigBeheerderWachtwoordLabel 
-      Caption         =   "Huidig beheerder wachtwoord:"
+   Begin VB.Label HuidigBeheerderwachtwoordLabel 
+      Caption         =   "Huidig beheerderwachtwoord:"
       Height          =   240
       Left            =   120
       TabIndex        =   15
       Top             =   360
       Width           =   2400
    End
-   Begin VB.Label DepotNaamLabel 
-      Caption         =   "Depot Naam:"
+   Begin VB.Label DepotnaamLabel 
+      Caption         =   "Depotnaam:"
       Height          =   240
       Left            =   120
       TabIndex        =   14
@@ -286,7 +286,7 @@ Option Explicit
 Private Sub HaalInvoer()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    Faktuur.DatumOpmaak = DatumOpmaakVeld.Text
    Faktuur.DepotNaam = DepotNaamVeld.Text
    Faktuur.MaxSubNrs = Trim$(Str$(MaakGetalOp(FaktuurMaxSubNrsVeld.Text) - 1))
@@ -296,6 +296,7 @@ Dim Keuze As Long
    Faktuur.LaatsteDatum = LaatsteFaktuurdatumVeld.Text
    Faktuur.LaatsteSubNr = Trim$(Str$(MaakGetalOp(NieuweFaktuurSubnrVeld.Text) - 1))
    IngevoerdWachtwoord = ZetBitsOm(HuidigWachtwoordVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -311,6 +312,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -327,6 +329,7 @@ Dim Keuze As Long
 
    DatumOpmaakVeld.SelStart = 0
    DatumOpmaakVeld.SelLength = Len(DatumOpmaakVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -343,6 +346,7 @@ Dim Keuze As Long
 
    If InStr("DJjM" & Chr$(vbKeyBack), Chr$(KeyAscii)) = 0 Then KeyAscii = Empty
    If InStr(UCase$(DatumOpmaakVeld.Text), UCase$(Chr$(KeyAscii))) > 0 Then KeyAscii = Empty
+
 EindeRoutine:
    Exit Sub
 
@@ -358,6 +362,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -374,6 +379,7 @@ Dim Keuze As Long
 
    DepotNaamVeld.SelStart = 0
    DepotNaamVeld.SelLength = Len(DepotNaamVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -389,6 +395,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -405,6 +412,7 @@ Dim Keuze As Long
 
    FaktuurMaxSubNrsVeld.SelStart = 0
    FaktuurMaxSubNrsVeld.SelLength = Len(FaktuurMaxSubNrsVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -414,13 +422,13 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Sub
 
-
 'Deze procedure legt de ingevoerde waarde vast.
 Private Sub FaktuurMaxSubNrsVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
 
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -440,6 +448,7 @@ Dim Keuze As Long
    FaktuurSubNrPeriodeVeld.Enabled = (InStr(FaktuurNrOpmaakVeld.Text, "#") > 0)
    LaatsteFaktuurdatumVeld.Enabled = (InStr(FaktuurNrOpmaakVeld.Text, "#") > 0)
    NieuweFaktuurSubnrVeld.Enabled = (InStr(FaktuurNrOpmaakVeld.Text, "#") > 0)
+
 EindeRoutine:
    Exit Sub
 
@@ -456,6 +465,7 @@ Dim Keuze As Long
 
    FaktuurNrOpmaakVeld.SelStart = 0
    FaktuurNrOpmaakVeld.SelLength = Len(FaktuurNrOpmaakVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -472,6 +482,7 @@ Dim Keuze As Long
 
    If InStr("DJjKMT#" & Chr$(vbKeyBack), Chr$(KeyAscii)) = 0 Then KeyAscii = Empty
    If InStr(UCase$(FaktuurNrOpmaakVeld.Text), UCase$(Chr$(KeyAscii))) > 0 Then KeyAscii = Empty
+
 EindeRoutine:
    Exit Sub
 
@@ -487,6 +498,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -503,6 +515,7 @@ Dim Keuze As Long
 
    FaktuurnrTekstVeld.SelStart = 0
    FaktuurnrTekstVeld.SelLength = Len(FaktuurnrTekstVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -518,6 +531,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    If InStr(ONGELDIGE_TEKENS, Chr$(KeyAscii)) > 0 Then KeyAscii = Empty
+
 EindeRoutine:
    Exit Sub
 
@@ -531,8 +545,9 @@ End Sub
 Private Sub FaktuurNrTekstVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -548,6 +563,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Faktuur.SubNrPeriode = Mid$("DMJ", FaktuurSubNrPeriodeVeld.ListIndex + 1, 1)
+
 EindeRoutine:
    Exit Sub
 
@@ -562,8 +578,9 @@ Private Sub FaktuurTekstKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   FaktuurTekstVenster.Show
-   FaktuurTekstVenster.ZOrder
+   FaktuurtekstVenster.Show
+   FaktuurtekstVenster.ZOrder
+
 EindeRoutine:
    Exit Sub
 
@@ -577,7 +594,7 @@ End Sub
 Private Sub Form_Activate()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    AnnulerenKnop.ToolTipText = "Sluit dit venster."
    DatumOpmaakVeld.ToolTipText = "De faktuur datum opmaak."
    DepotNaamVeld.ToolTipText = "De naam van het depot dat op het faktuur wordt afgedrukt."
@@ -598,7 +615,9 @@ Dim Keuze As Long
    Else
       NieuweFaktuurSubnrVeld.Text = CStr(Val(Faktuur.LaatsteSubNr()) + 1)
    End If
+
    LaatsteFaktuurdatumVeld.Text = Faktuur.LaatsteDatum()
+
 EindeRoutine:
    Exit Sub
 
@@ -613,15 +632,16 @@ Private Sub Form_Load()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   Me.Left = (DepotBeheerderVenster.Width / 2) - (Me.Width / 2)
-   Me.Top = (DepotBeheerderVenster.Height / 2.5) - (Me.Height / 2)
-   
+   Me.Left = (DepotbeheerderVenster.Width / 2) - (Me.Width / 2)
+   Me.Top = (DepotbeheerderVenster.Height / 2.5) - (Me.Height / 2)
+
    DatumOpmaakVeld.Text = Faktuur.DatumOpmaak()
    DepotNaamVeld.Text = Faktuur.DepotNaam()
    FaktuurMaxSubNrsVeld.Text = Faktuur.MaxSubNrs() + 1
    FaktuurNrOpmaakVeld.Text = Faktuur.NrOpmaak()
    FaktuurnrTekstVeld.Text = Faktuur.SubNrTekst()
    FaktuurSubNrPeriodeVeld.ListIndex = InStr("DMJ", Faktuur.SubNrPeriode()) - 1
+
 EindeRoutine:
    Exit Sub
 
@@ -638,6 +658,7 @@ Dim Keuze As Long
 
    HuidigWachtwoordVeld.SelStart = 0
    HuidigWachtwoordVeld.SelLength = Len(HuidigWachtwoordVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -653,6 +674,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    If InStr("0123456789" & Chr$(vbKeyBack), Chr$(KeyAscii)) = 0 Then KeyAscii = Empty
+
 EindeRoutine:
    Exit Sub
 
@@ -669,6 +691,7 @@ Dim Keuze As Long
 
    NieuweFaktuurSubnrVeld.SelStart = 0
    NieuweFaktuurSubnrVeld.SelLength = Len(NieuweFaktuurSubnrVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -684,6 +707,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    HaalInvoer
+
 EindeRoutine:
    Exit Sub
 
@@ -700,6 +724,7 @@ Dim Keuze As Long
 
    NieuwWachtwoordVeld.SelStart = 0
    NieuwWachtwoordVeld.SelLength = Len(NieuwWachtwoordVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -716,6 +741,7 @@ Dim Keuze As Long
 
    PrinterVenster.Show
    PrinterVenster.ZOrder
+
 EindeRoutine:
    Exit Sub
 
@@ -734,6 +760,7 @@ Dim Keuze As Long
    StelWachtwoordIn NieuwWachtwoordVeld.Text
    SlaInstellingenOp
    Unload Me
+
 EindeRoutine:
    Exit Sub
 

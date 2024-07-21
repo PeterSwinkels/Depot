@@ -14,17 +14,17 @@ Public Enum ZoekrichtingE
    ZrVooruit      'Definieert de vooruit zoekrichting.
 End Enum
 
-Public Const BACKUP_LABEL As String = "DEPOT BEHEERDER BACKUP" 'Definieert het label waarmee door dit programma gemaakte backups worden aangeduid.
-Public Const EURO_TEKEN As String = "€"                        'Definieert het EURO symbool. (Unicode 0x20AC)
-Public Const ONGELDIGE_TEKENS As String = "\/:*?""<>|"         'Definieert tekens die niet zijn toegestaan in faktuur of klant nummers.
-Public Const PAD_SCHEIDINGS_TEKEN As String = "\"              'Definieert het teken dat wordt gebruikt om de namen in een pad te scheiden.
+Public Const BACKUP_LABEL As String = "DEPOT BEHEERDER BACKUP"   'Definieert het label waarmee door dit programma gemaakte backups worden aangeduid.
+Public Const EURO_TEKEN As String = "€"                          'Definieert het EURO symbool. (Unicode 0x20AC)
+Public Const ONGELDIGE_TEKENS As String = "\/:*?""<>|"           'Definieert tekens die niet zijn toegestaan in faktuur of klant nummers.
+Public Const PAD_SCHEIDINGS_TEKEN As String = "\"                'Definieert het teken dat wordt gebruikt om de namen in een pad te scheiden.
 
 Public ActieIsToeVoegen As Boolean     'Geeft aan of gegevens toegevoegd of gewijzigd worden.
 Public Buffer(0 To 6) As String        'Bevat ingevoerde gegevens die nog moeten worden verwerkt.
 Public IngevoerdWachtwoord As String   'Bevat het door de gebruiker ingevoerde wachtwoord.
 Public KlantenAfdrukken As Byte        'Geeft aan welke klant velden worden afgedrukt.
 Public VoorraadAfdrukken As Byte       'Geeft aan welke voorraad lijst velden worden afgedrukt.
-Public Wachtwoord As String            'Bevat beheerder wachtwoord.
+Public Wachtwoord As String            'Bevat hets beheerder wachtwoord.
 
 'Deze procedure berekent het opgegeven percentage van het opgegeven getal en stuurt deze terug.
 Public Function BerekenProcent(Percentage As Long, Getal As Single) As Single
@@ -33,7 +33,7 @@ Dim Keuze As Long
 Dim Procent As Long
 
    Procent = (Getal / 100) * Percentage
-   
+
 EindeRoutine:
    BerekenProcent = Procent
    Exit Function
@@ -43,6 +43,7 @@ Fout:
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Function
+
 'Deze procedure vraagt de gebruiker of een actie na een leesfout afbroken moet worden en stuurt het resultaat terug.
 Public Function BevestigAfbrekenNaLeesFout(Pad As String) As Boolean
 On Error GoTo Fout
@@ -53,7 +54,7 @@ Dim Keuze As Long
    Bericht = "Gegevens in """ & Pad & """ zijn mogelijk niet juist ingelezen tijdens het openen." & vbCr
    Bericht = Bericht & "De mogelijk onjuiste gegevens toch opslaan?"
    Afbreken = (MsgBox(Bericht, vbExclamation Or vbYesNo Or vbDefaultButton2) = vbNo)
-   
+
 EindeRoutine:
    BevestigAfbrekenNaLeesFout = Afbreken
    Exit Function
@@ -70,26 +71,27 @@ On Error GoTo Fout
 Dim Buffer As String
 Dim Keuze As Long
 Dim Lengte As Long
-Dim RegelEinde As Long
+Dim Regeleinde As Long
 
    Printer.Font.Italic = Cursief
    Printer.Font.Bold = Vet
-   
+
    Buffer = Tekst
    Do Until Buffer = vbNullString
-      RegelEinde = InStr(Buffer$, vbCr)
-      If RegelEinde > 0 Then RegelEinde = InStr(RegelEinde, Buffer, vbLf)
+      Regeleinde = InStr(Buffer$, vbCr)
+      If Regeleinde > 0 Then Regeleinde = InStr(Regeleinde, Buffer, vbLf)
       Printer.CurrentX = x
       Printer.CurrentY = y
-      If RegelEinde > 0 Then Lengte = RegelEinde Else Lengte = Len(Buffer)
+      If Regeleinde > 0 Then Lengte = Regeleinde Else Lengte = Len(Buffer)
       Printer.Print Left$(Buffer, Lengte);
       Buffer = Mid$(Buffer, Lengte + 1)
-      If RegelEinde > 0 Then y = y + 1
+      If Regeleinde > 0 Then y = y + 1
       If y > Printer.ScaleHeight - 2 Then
          Printer.NewPage
          y = 1
       End If
    Loop
+
 EindeRoutine:
    Exit Sub
 
@@ -123,14 +125,14 @@ Dim VeldBreedte As Single
          TotaleVeldBreedte = TotaleVeldBreedte + DataBron.VeldBreedte(Veld)
       End If
    Next Veld
- 
+
    If AfgedrukteVelden = 0 Then
       MsgBox "Geen velden om af te drukken geselecteerd.", vbInformation
    Else
       StelPrinterIn
-      
+
       Screen.MousePointer = vbHourglass
-      
+
       Percentage = 100 / TotaleVeldBreedte
       Printer.CurrentY = 1
       Printer.Font.Bold = True
@@ -154,7 +156,7 @@ Dim VeldBreedte As Single
          End If
       Next Veld
       Printer.Print
-      
+
       Printer.Font.Bold = False
       For Item = 0 To DataBron.AantalItems() - 1
          Printer.CurrentX = 1
@@ -183,10 +185,11 @@ Dim VeldBreedte As Single
       Next Item
       Printer.EndDoc
    End If
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -206,12 +209,12 @@ Dim Keuze As Long
       Bits(Bit) = CBool((ByteV And BitPatroonWaarde) \ BitPatroonWaarde)
       BitPatroonWaarde = BitPatroonWaarde * &H2&
    Next Bit
-   
+
 EindeRoutine:
    HaalBits = Bits()
    Screen.MousePointer = vbDefault
    Exit Function
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -228,9 +231,9 @@ Dim VorigeMuisAanwijzer As Integer
 
    Foutcode = Err.Number
    Omschrijving = Err.Description
-  
+
    On Error GoTo Fout
- 
+
    If Not ActieveMap = vbNullString Then
       ActieveMap = LCase$(VoegScheidingstekenToe(ActieveMap))
    End If
@@ -239,15 +242,15 @@ Dim VorigeMuisAanwijzer As Integer
    If Not Right$(Omschrijving, 1) = "." Then
       Omschrijving = Omschrijving & "."
    End If
-   
+
    VorigeMuisAanwijzer = Screen.MousePointer
    Screen.MousePointer = vbDefault
-   
+
    Bericht = Omschrijving & vbCr
    Bericht = Bericht & "Foutcode: " & CStr(Foutcode)
    If Not ActieveMap = vbNullString Then Bericht = Bericht & vbCr & "Map: """ & ActieveMap & """"
    If Not ActiefBestand = vbNullString Then Bericht = Bericht & vbCr & "Bestand: """ & ActiefBestand & """"
-   
+
    Keuze = MsgBox(Bericht, vbExclamation Or vbAbortRetryIgnore Or vbDefaultButton2)
    Select Case Keuze
       Case vbAbort
@@ -257,13 +260,13 @@ Dim VorigeMuisAanwijzer As Integer
       Case vbIgnore
          Resume Next
    End Select
-   
+
    HandelFoutAf = Keuze
    Exit Function
 
 BreekProgrammaAf:
    End
-   
+
 Fout:
    Resume BreekProgrammaAf
 End Function
@@ -323,12 +326,12 @@ Dim Vermenigvuldiger As Long
       ByteV = ByteV Or (Abs(Bits(Bit)) * Vermenigvuldiger)
       Vermenigvuldiger = Vermenigvuldiger * &H2&
    Next Bit
-   
+
 EindeRoutine:
    PlaatsBits = ByteV
    Screen.MousePointer = vbDefault
    Exit Function
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -349,7 +352,7 @@ Dim Keuze As Long
 EindeRoutine:
    RondAf = AfgerondBedrag
    Exit Function
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -362,7 +365,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Screen.MousePointer = vbHourglass
-   
+
    With Printer
       .KillDoc
       .ColorMode = vbPRCMMonochrome
@@ -383,11 +386,11 @@ Dim Keuze As Long
       .ScaleMode = vbCharacters
       .TrackDefault = True
    End With
-   
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -395,7 +398,7 @@ Fout:
 End Sub
 
 'Deze procedure toont informatie over dit programma.
-Public Sub ToonProgrammaInformatie()
+Public Sub ToonProgrammainformatie()
 On Error GoTo Fout
 Dim Bericht As String
 Dim Keuze As Long
@@ -405,9 +408,10 @@ Dim Keuze As Long
    Bericht = Bericht & "Versie: " & App.Major & "." & App.Minor & App.Revision & vbCr
    Bericht = Bericht & "***2003***"
    MsgBox Bericht, vbInformation
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -427,10 +431,11 @@ Dim Veld As Long
          Verwissel Data(Veld, Item), Data(Veld, Item - 1)
       Next Veld
    Next Item
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -453,11 +458,11 @@ Dim VolgendePositie As Long
       Positie = VolgendePositie
    Loop
    If Positie > 0 Then PadZonderBestandsnaam = Left$(PadZonderBestandsnaam, Positie)
-   
+
 EindeRoutine:
    VerwijderBestandsnaam = PadZonderBestandsnaam
    Exit Function
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -475,7 +480,7 @@ Dim Waarde3 As Variant
    Waarde2 = Waarde3
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -492,11 +497,11 @@ Dim PadMetScheidingsTeken As String
    If Not Right$(Pad, Len(PAD_SCHEIDINGS_TEKEN)) = PAD_SCHEIDINGS_TEKEN Then
       PadMetScheidingsTeken = PadMetScheidingsTeken & PAD_SCHEIDINGS_TEKEN
    End If
-  
+
 EindeRoutine:
    VoegScheidingstekenToe = PadMetScheidingsTeken
    Exit Function
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -514,11 +519,11 @@ Dim TekenIndex As Long
    For TekenIndex = 1 To Len(OmgezetteTekst)
       Mid$(OmgezetteTekst, TekenIndex, 1) = Chr$(&HFF& Xor Asc(Mid$(OmgezetteTekst, TekenIndex, 1)))
    Next TekenIndex
-   
+
 EindeRoutine:
    ZetBitsOm = OmgezetteTekst
    Exit Function
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -561,22 +566,22 @@ Dim Start As Long
                Start = 0
             End If
       End Select
-      
+
       Gevonden = False
       If HoofdletterGevoelig Then
          ZoekTekst = UCase$(ZoekTekst)
       End If
-      
+
       Select Case Richting
          Case ZrAchteruit
             Einde = 0
          Case ZrVooruit
             Einde = DataBron.AantalItems() - 1
       End Select
-   
+
       Stap = Sgn(Einde - Start)
       If Stap = 0 Then Stap = 1
-  
+
       For Item = Start To Einde Step Stap
          Data = DataBron.Data(Veld, Item)
          If HoofdletterGevoelig Then Data = UCase$(Data)
@@ -588,14 +593,14 @@ Dim Start As Long
          If Gevonden Then Exit For
       Next Item
    End If
+
 EindeRoutine:
    ZoekItemIndex = Item
    Exit Function
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Function
-
 

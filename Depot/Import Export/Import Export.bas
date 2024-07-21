@@ -3,16 +3,16 @@ Attribute VB_Name = "ImportExport"
 Option Explicit
 
 'Deze opsomming definieert de beschikbare databronnen.
-Public Enum DataBronE
+Public Enum DatabronE
    DbKlanten    'Definieert de klanten databron.
    DbVoorraad   'Definieert de voorraad databron.
 End Enum
 
 Public ActieIsImporteren As Boolean       'Geeft aan of een bestand geïmporteerd of geëxporteerd wordt.
 Public Bestand As String                  'Bevat de naam van een geïmporteerd of geëxporteerd bestand.
-Public DataBron As Object                 'Bevat de geselecteerde data bron.
-Public VeldType(0 To 6) As Long           'Geeft het type van ieder veld in het geïmporteerde of geëxporteerde bestand op.
-Public VeldScheidTekens As String         'Bevat de tekens waarmee de velden in een geïmporteerd of geëxporteerd bestand worden gescheiden.
+Public Databron As Object                 'Bevat de geselecteerde databron.
+Public Veldtype(0 To 6) As Long           'Geeft het type van ieder veld in het geïmporteerde of geëxporteerde bestand op.
+Public Veldscheidingstekens As String     'Bevat de tekens waarmee de velden in een geïmporteerd of geëxporteerd bestand worden gescheiden.
 
 Public Klanten As New KlantenObject       'Bevat een verwijzing naar het klanten object.
 Public Voorraad As New VoorraadObject     'Bevat een verwijzing naar het voorraad object.
@@ -40,11 +40,11 @@ Dim Veld As Long
         Screen.MousePointer = vbHourglass
         BestandH = FreeFile()
         Open Bestand For Output Lock Read Write As BestandH
-            For Item = 0 To DataBron.AantalItems() - 1
-               For Veld = 0 To DataBron.AantalVelden() - 1
-                  If VeldType(Veld) > 0 Then
-                     Data = DataBron.Data(VeldType(Veld) - 1, Item)
-                     Print #BestandH, Data; VeldScheidTekens;
+            For Item = 0 To Databron.AantalItems() - 1
+               For Veld = 0 To Databron.AantalVelden() - 1
+                  If Veldtype(Veld) > 0 Then
+                     Data = Databron.Data(Veldtype(Veld) - 1, Item)
+                     Print #BestandH, Data; Veldscheidingstekens;
                   End If
                Next Veld
                Print #BestandH,
@@ -79,15 +79,15 @@ Dim VeldEinde As Long
          Do Until EOF(BestandH)
             Line Input #BestandH, Data
             Erase Buffer
-            For Veld = 0 To DataBron.AantalVelden() - 1
-               VeldEinde = InStr(Data, VeldScheidTekens)
+            For Veld = 0 To Databron.AantalVelden() - 1
+               VeldEinde = InStr(Data, Veldscheidingstekens)
                If VeldEinde = 0 Then VeldEinde = Len(Data) + 1
                Buffer(Veld) = Left$(Data, VeldEinde - 1)
-               Data = Mid$(Data, VeldEinde + Len(VeldScheidTekens))
+               Data = Mid$(Data, VeldEinde + Len(Veldscheidingstekens))
             Next Veld
-            DataBron.VoegItemToe
-            For Veld = 0 To DataBron.AantalVelden() - 1
-               If VeldType(Veld) > 0 Then DataBron.Data(VeldType(Veld) - 1, DataBron.AantalItems() - 1) = Buffer(Veld)
+            Databron.VoegItemToe
+            For Veld = 0 To Databron.AantalVelden() - 1
+               If Veldtype(Veld) > 0 Then Databron.Data(Veldtype(Veld) - 1, Databron.AantalItems() - 1) = Buffer(Veld)
             Next Veld
          Loop
       Close BestandH
@@ -156,6 +156,7 @@ Dim Lengte As Long
          Lengte = Asc(Input$(1, BestandH)): Wachtwoord = Input$(Lengte, BestandH)
       End If
    Close BestandH
+   
 EindeProcedure:
    Exit Sub
    

@@ -41,7 +41,7 @@ Begin VB.Form BackupVenster
       Top             =   720
       Width           =   1815
    End
-   Begin VB.TextBox BackupMapVeld 
+   Begin VB.TextBox BackupmapVeld 
       Height          =   285
       Left            =   120
       TabIndex        =   0
@@ -66,8 +66,8 @@ Begin VB.Form BackupVenster
       Top             =   720
       Width           =   1815
    End
-   Begin VB.Label BackupLocatieLabel 
-      Caption         =   "Backup Locatie:"
+   Begin VB.Label BackuplocatieLabel 
+      Caption         =   "Backuplocatie:"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
          Size            =   8.25
@@ -93,49 +93,50 @@ Attribute VB_Exposed = False
 Option Explicit
 
 'Deze procedure kopieert bestanden van de opgegeven bron map naar de opgegeven doel map.
-Private Sub KopieerBestanden(BronMap As String, DoelMap As String, ByRef Afbreken As Boolean)
+Private Sub KopieerBestanden(Bronmap As String, Doelmap As String, ByRef Afbreken As Boolean)
 On Error GoTo Fout
 Dim ActiefBestand As String
 Dim ActieveMap As String
 Dim Bestand As String
 Dim Keuze As Long
 
-   If BackupMapVeld.Text = vbNullString Then
+   If BackupmapVeld.Text = vbNullString Then
       MsgBox "Geen backup map opgegeven", vbInformation
    Else
-      BronMap = VoegScheidingstekenToe(BronMap)
-      DoelMap = VoegScheidingstekenToe(DoelMap)
-    
+      Bronmap = VoegScheidingstekenToe(Bronmap)
+      Doelmap = VoegScheidingstekenToe(Doelmap)
+
       Afbreken = False
-   
-      If Dir$(DoelMap, vbArchive Or vbDirectory Or vbHidden Or vbNormal Or vbReadOnly Or vbSystem) = vbNullString Then
-         ActieveMap = DoelMap
-         MkDir DoelMap
+
+      If Dir$(Doelmap, vbArchive Or vbDirectory Or vbHidden Or vbNormal Or vbReadOnly Or vbSystem) = vbNullString Then
+         ActieveMap = Doelmap
+         MkDir Doelmap
       Else
-         Afbreken = (MsgBox("Alle bestanden in " & DoelMap & vbCr & "zullen verwijderd worden. Doorgaan?", vbExclamation Or vbYesNo Or vbDefaultButton2) = vbNo)
+         Afbreken = (MsgBox("Alle bestanden in " & Doelmap & vbCr & "zullen verwijderd worden. Doorgaan?", vbExclamation Or vbYesNo Or vbDefaultButton2) = vbNo)
       End If
-   
+
       If Not Afbreken Then
          Screen.MousePointer = vbHourglass
-         
-         VerwijderBestanden DoelMap
-         
-         ActieveMap = BronMap
-         Bestand = Dir$(BronMap & "*.*", vbArchive Or vbHidden Or vbNormal Or vbReadOnly Or vbSystem)
+
+         VerwijderBestanden Doelmap
+
+         ActieveMap = Bronmap
+         Bestand = Dir$(Bronmap & "*.*", vbArchive Or vbHidden Or vbNormal Or vbReadOnly Or vbSystem)
          Do Until Bestand = vbNullString
             ActiefBestand = Bestand
-            
-            ActieveMap = BronMap
-            FileCopy BronMap & Bestand, DoelMap & Bestand
-            
-            ActieveMap = DoelMap
-            SetAttr DoelMap & Bestand, (GetAttr(BronMap & Bestand) And (vbAlias Or vbArchive Or vbDirectory Or vbHidden Or vbNormal Or vbReadOnly Or vbSystem Or vbVolume))
-            
+
+            ActieveMap = Bronmap
+            FileCopy Bronmap & Bestand, Doelmap & Bestand
+
+            ActieveMap = Doelmap
+            SetAttr Doelmap & Bestand, (GetAttr(Bronmap & Bestand) And (vbAlias Or vbArchive Or vbDirectory Or vbHidden Or vbNormal Or vbReadOnly Or vbSystem Or vbVolume))
+
             Bestand = Dir$()
             If UCase$(Bestand) = "BACKUP.DAT" Then Bestand = Dir$()
          Loop
       End If
    End If
+
 EindeRoutine:
    Screen.MousePointer = vbDefault
    Exit Sub
@@ -147,22 +148,23 @@ Fout:
 End Sub
 
 'Deze procedure maakt een backup label bestand in de opgegeven doel map.
-Private Sub MaakBackupLabel(DoelMap As String)
+Private Sub MaakBackupLabel(Doelmap As String)
 On Error GoTo Fout
 Dim ActiefBestand As String
 Dim ActieveMap As String
 Dim BestandH As Integer
 Dim Keuze As Long
 
-   If Not DoelMap = vbNullString Then
-      DoelMap = VoegScheidingstekenToe(DoelMap)
-      ActieveMap = DoelMap
+   If Not Doelmap = vbNullString Then
+      Doelmap = VoegScheidingstekenToe(Doelmap)
+      ActieveMap = Doelmap
       ActiefBestand = "Backup.dat"
       BestandH = FreeFile()
-      Open DoelMap & "Backup.dat" For Output Lock Read Write As BestandH
+      Open Doelmap & "Backup.dat" For Output Lock Read Write As BestandH
          Print #BestandH, BACKUP_LABEL;
       Close BestandH
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -173,7 +175,7 @@ Fout:
 End Sub
 
 'Deze procedure controleert of er een backup aanwezig is in de opgegeven map.
-Private Function MapIsBackup(BronMap As String) As Boolean
+Private Function MapIsBackup(Bronmap As String) As Boolean
 On Error GoTo Fout
 Dim ActiefBestand As String
 Dim ActieveMap As String
@@ -181,25 +183,25 @@ Dim Data As String
 Dim BestandH As Integer
 Dim IsBackup As Boolean
 Dim Keuze As Long
-   
+
    IsBackup = False
-   If Not BronMap = vbNullString Then
-      BronMap = VoegScheidingstekenToe(BronMap)
-      ActieveMap = BronMap
+   If Not Bronmap = vbNullString Then
+      Bronmap = VoegScheidingstekenToe(Bronmap)
+      ActieveMap = Bronmap
       ActiefBestand = "Backup.dat"
       BestandH = FreeFile()
-      If Not Dir$(BronMap & "Backup.dat", vbArchive Or vbHidden Or vbNormal Or vbReadOnly Or vbSystem) = vbNullString Then
-         Open BronMap & "Backup.dat" For Binary Lock Read Write As BestandH
+      If Not Dir$(Bronmap & "Backup.dat", vbArchive Or vbHidden Or vbNormal Or vbReadOnly Or vbSystem) = vbNullString Then
+         Open Bronmap & "Backup.dat" For Binary Lock Read Write As BestandH
             Data = Input$(LOF(BestandH), BestandH)
             IsBackup = (Data = BACKUP_LABEL)
          Close BestandH
       End If
    End If
-    
+
 EindeRoutine:
    MapIsBackup = IsBackup
    Exit Function
-   
+
 Fout:
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -222,9 +224,10 @@ Dim Keuze As Long
       Kill Map & Bestand
       Bestand = Dir$()
    Loop
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -236,8 +239,9 @@ Private Sub BackupMapVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   BackupMapVeld.SelStart = 0
-   BackupMapVeld.SelLength = Len(BackupMapVeld.Text)
+   BackupmapVeld.SelStart = 0
+   BackupmapVeld.SelLength = Len(BackupmapVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -252,14 +256,15 @@ Private Sub Form_Load()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   BackupMapVeld.ToolTipText = "De map waar de backup wordt geplaatst."
+   BackupmapVeld.ToolTipText = "De map waar de backup wordt geplaatst."
    MaakBackupKnop.ToolTipText = "Plaatst de backup in de opgegeven map."
    ZetBackupTerugKnop.ToolTipText = "Vervangt de huidige de gegevens met de backup in de opgegeven map."
 
    Me.Left = (DepotBeheerderVenster.Width / 2) - (Me.Width / 2)
    Me.Top = (DepotBeheerderVenster.Height / 3) - (Me.Height / 2)
-   
-   BackupMapVeld.Text = BackupMap
+
+   BackupmapVeld.Text = BackupMap
+
 EindeRoutine:
    Exit Sub
 
@@ -276,16 +281,17 @@ Dim Afbreken As Boolean
 Dim Keuze As Long
 
    If Beheerder() Then
-      BackupMap = BackupMapVeld.Text
-      
+      BackupMap = BackupmapVeld.Text
+
       SlaGegevensOp
-      
+
       KopieerBestanden ".\Data\", BackupMap, Afbreken
       If Not Afbreken Then
          MaakBackupLabel BackupMap
          MsgBox "De backup is gemaakt.", vbInformation
       End If
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -304,9 +310,9 @@ Dim Afbreken As Boolean
 Dim Keuze As Long
 
    If Beheerder() Then
-      If MapIsBackup(BackupMapVeld.Text) Then
-         KopieerBestanden BackupMapVeld.Text, ".\Data\", Afbreken
-         
+      If MapIsBackup(BackupmapVeld.Text) Then
+         KopieerBestanden BackupmapVeld.Text, ".\Data\", Afbreken
+
          MsgBox "De Depot Beheerder wordt nu opnieuw gestart.", vbInformation
          ActieveMap = CurDir$()
          ActiefBestand = "Depot.exe"
@@ -315,6 +321,7 @@ Dim Keuze As Long
          MsgBox "Geen backup aanwezig.", vbExclamation
       End If
    End If
+
 EindeRoutine:
    GegevensOpslaan = False
    Unload DepotBeheerderVenster

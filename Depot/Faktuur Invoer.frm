@@ -33,7 +33,7 @@ Begin VB.Form FaktuurInvoerVenster
       Value           =   1  'Checked
       Width           =   1275
    End
-   Begin VB.TextBox ArtikelNaamVeld 
+   Begin VB.TextBox ArtikelnaamVeld 
       Enabled         =   0   'False
       Height          =   285
       Left            =   2160
@@ -145,6 +145,7 @@ Dim Keuze As Long
 
    AantalVeld.SelStart = 0
    AantalVeld.SelLength = Len(AantalVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -161,22 +162,23 @@ Dim Keuze As Long
 
    Buffer(FkArtikelNr) = UCase$(ArtikelnrVeld.Text)
    Buffer(FkAantal) = MaakGetalOp(AantalVeld.Text)
-   Buffer(FkAtikelNaam) = ArtikelNaamVeld.Text
+   Buffer(FkAtikelNaam) = ArtikelnaamVeld.Text
    Buffer(FkStukprijs) = MaakGetalOp(StukprijsVeld.Text)
-   
+
    If UitVoorraadVeld.Value = vbChecked Then
       Buffer(FkUitVoorraad) = "J"
    ElseIf UitVoorraadVeld.Value = vbUnchecked Then
       Buffer(FkUitVoorraad) = "N"
    End If
-   
+
    If LeverbaarVeld.Value = vbChecked Then
       Buffer(FkLeverbaar) = "J"
    ElseIf LeverbaarVeld.Value = vbUnchecked Then
       Buffer(FkLeverbaar) = "N"
    End If
-   
+
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -193,6 +195,7 @@ Dim Keuze As Long
 
    Erase Buffer
    Unload Me
+
 EindeRoutine:
    Exit Sub
 
@@ -203,12 +206,13 @@ Fout:
 End Sub
 
 'Deze procedure selecteert automatisch de inhoud van het veld.
-Private Sub ArtikelNaamVeld_GotFocus()
+Private Sub ArtikelnaamVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   ArtikelNaamVeld.SelStart = 0
-   ArtikelNaamVeld.SelLength = Len(ArtikelNaamVeld.Text)
+   ArtikelnaamVeld.SelStart = 0
+   ArtikelnaamVeld.SelLength = Len(ArtikelnaamVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -225,6 +229,7 @@ Dim Keuze As Long
 
    ArtikelnrVeld.SelStart = 0
    ArtikelnrVeld.SelLength = Len(ArtikelnrVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -240,6 +245,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    AantalVeld.ToolTipText = "Het aantal artikelen."
+
    If ActieIsToeVoegen Then
       ActieKnop.Caption = "&Toevoegen"
       ActieKnop.ToolTipText = "Voegt het artikel toe."
@@ -247,8 +253,9 @@ Dim Keuze As Long
       ActieKnop.Caption = "&Wijzigen"
       ActieKnop.ToolTipText = "Wijzigt het artikel."
    End If
+
    AnnulerenKnop.ToolTipText = "Sluit dit venster."
-   ArtikelNaamVeld.ToolTipText = "De artikel naam."
+   ArtikelnaamVeld.ToolTipText = "De artikel naam."
    ArtikelnrVeld.ToolTipText = "Het artikelnummer."
    LeverbaarVeld.ToolTipText = "Geeft aan of het artikel leverbaar is."
    StukprijsVeld.ToolTipText = "De artikel stukprijs."
@@ -256,25 +263,26 @@ Dim Keuze As Long
 
    ArtikelnrVeld.Text = Buffer(FkArtikelNr)
    AantalVeld.Text = Buffer(FkAantal)
-   ArtikelNaamVeld.Text = Buffer(FkAtikelNaam)
+   ArtikelnaamVeld.Text = Buffer(FkAtikelNaam)
    StukprijsVeld.Text = Buffer(FkStukprijs)
+
    If Faktuur.IsParticulier() Then
       VeldNaam(FkStukprijs).Enabled = True
       StukprijsVeld.Enabled = True
    End If
-   
+
    If Buffer(FkUitVoorraad) = "J" Then
       UitVoorraadVeld.Value = vbChecked
    ElseIf Buffer(FkUitVoorraad) = "N" Then
       UitVoorraadVeld.Value = vbUnchecked
    End If
-   
+
    If Buffer(FkLeverbaar) = "J" Then
       LeverbaarVeld.Value = vbChecked
    ElseIf Buffer(FkLeverbaar) = "N" Then
       LeverbaarVeld.Value = vbUnchecked
    End If
-   
+
 EindeRoutine:
    Exit Sub
 
@@ -291,6 +299,7 @@ Dim Keuze As Long
 
    StukprijsVeld.SelStart = 0
    StukprijsVeld.SelLength = Len(StukprijsVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -308,7 +317,7 @@ Dim Keuze As Long
    Select Case UitVoorraadVeld.Value
       Case vbChecked
          VeldNaam(FkAtikelNaam).Enabled = False
-         ArtikelNaamVeld.Enabled = False
+         ArtikelnaamVeld.Enabled = False
          If Not Faktuur.IsParticulier() Then
             VeldNaam(FkStukprijs).Enabled = False
             StukprijsVeld.Enabled = False
@@ -316,9 +325,10 @@ Dim Keuze As Long
       Case vbUnchecked
          VeldNaam(FkAtikelNaam).Enabled = True
          VeldNaam(FkStukprijs).Enabled = True
-         ArtikelNaamVeld.Enabled = True
+         ArtikelnaamVeld.Enabled = True
          StukprijsVeld.Enabled = True
    End Select
+
 EindeRoutine:
    Exit Sub
 

@@ -11,18 +11,108 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'Deze module bevat het fakturen object.
+'Deze module bevat het fakturenobject.
 Option Explicit
 
-'Deze opsomming bevat de fakturen data velden.
+'Deze opsomming bevat de fakturendatavelden.
 Public Enum FakturenDataVeldenE
-   FkFaktuurNummer   'Definieert een faktuur nummer.
-   FkFaktuurDatum    'Definieert een faktuur datum.
+   FkFaktuurnummer   'Definieert een faktuurnummer.
+   FkFaktuurdatum    'Definieert een faktuurdatum.
 End Enum
 
 Private AantalItemsV As Long       'Bevat het aantal opgeslagen fakturen.
 Private ActiefFaktuurV As String   'Bevat het nummer van een actief faktuur.
 Private DataV() As String          'Bevat de gegevens van de fakturen.
+
+'Deze procedure stuurt het aantal opgeslagen fakturen terug.
+Public Property Get AantalItems() As Long
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   AantalItems = AantalItemsV
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt het aantal velden voor dit object terug.
+Public Property Get AantalVelden() As Long
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   AantalVelden = 2
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt het geselecteerde opgeslagen faktuur terug.
+Public Property Get ActiefFaktuur() As String
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   ActiefFaktuur = ActiefFaktuurV
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure legt de nieuwe faktuurselectie vast.
+Public Property Let ActiefFaktuur(NieuwActiefFaktuur As String)
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   ActiefFaktuurV = NieuwActiefFaktuur
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure stuurt de gegevens van het opgegeven veld van het opgegeven opgeslagen faktuur terug.
+Public Property Get Data(Veld As Long, Faktuurnr As Long) As String
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   Data = DataV(Veld, Faktuurnr)
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
+
+'Deze procedure legt de opgegeven faktuurgegevens vast.
+Public Property Let Data(Veld As Long, Faktuurnr As Long, NieuweData As String)
+On Error GoTo Fout
+Dim Keuze As Long
+
+EindeRoutine:
+   DataV(Veld, Faktuurnr) = NieuweData
+   Exit Property
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Property
 
 'Deze procedure maakt een lijst van de opgeslagen fakturen.
 Public Sub MaakLijst()
@@ -40,113 +130,31 @@ Dim Keuze As Long
    Do Until Bestand = vbNullString
       ActiefBestand = Bestand
       ReDim Preserve DataV(0 To 1, 0 To AantalItemsV) As String
-      DataV(FkFaktuurNummer, AantalItemsV) = Left$(Bestand, InStr(UCase$(Bestand), ".FKT") - 1)
-      DataV(FkFaktuurDatum, AantalItemsV) = FileDateTime(".\Data\" & Bestand)
+      DataV(FkFaktuurnummer, AantalItemsV) = Left$(Bestand, InStr(UCase$(Bestand), ".FKT") - 1)
+      DataV(FkFaktuurdatum, AantalItemsV) = FileDateTime(".\Data\" & Bestand)
       AantalItemsV = AantalItemsV + 1
       Bestand = Dir$()
    Loop
    Screen.MousePointer = vbDefault
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf(ActieveMap, ActiefBestand)
    If Keuze = vbIgnore Then Resume EindeRoutine
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure stuurt het aantal opgeslagen fakturen terug.
-Public Property Get AantalItems() As Long
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   AantalItems = AantalItemsV
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt het aantal velden voor dit object terug.
-Public Property Get AantalVelden() As Long
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   AantalVelden = 2
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt het geselecteerde opgeslagen faktuur terug.
-Public Property Get ActiefFaktuur() As String
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   ActiefFaktuur = ActiefFaktuurV
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure legt de nieuwe faktuur selectie vast.
-Public Property Let ActiefFaktuur(NieuwActiefFaktuur As String)
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   ActiefFaktuurV = NieuwActiefFaktuur
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure stuurt de gegevens van het opgegeven veld van het opgegeven opgeslagen faktuur terug.
-Public Property Get Data(Veld As Long, FaktuurNr As Long) As String
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   Data = DataV(Veld, FaktuurNr)
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
-'Deze procedure legt de opgegeven faktuur gegevens vast.
-Public Property Let Data(Veld As Long, FaktuurNr As Long, NieuweData As String)
-On Error GoTo Fout
-Dim Keuze As Long
-EindeRoutine:
-   DataV(Veld, FaktuurNr) = NieuweData
-   Exit Property
-   
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
-End Property
-
 'Deze procedure stuurt de totale breedte van alle velden terug.
 Public Property Get TotaleVeldBreedte() As Long
 On Error GoTo Fout
 Dim Keuze As Long
+
 EindeRoutine:
    TotaleVeldBreedte = 2
    Exit Property
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -160,9 +168,9 @@ Dim Breedte As Long
 Dim Keuze As Long
 
    Select Case Veld
-      Case FkFaktuurNummer
+      Case FkFaktuurnummer
          Breedte = 1
-      Case FkFaktuurDatum
+      Case FkFaktuurdatum
          Breedte = 1
       Case Else
          Breedte = 0
@@ -171,7 +179,7 @@ Dim Keuze As Long
 EindeRoutine:
    VeldBreedte = Breedte
    Exit Property
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -185,18 +193,18 @@ Dim Keuze As Long
 Dim Naam As String
 
    Select Case Veld
-      Case FkFaktuurNummer
+      Case FkFaktuurnummer
          Naam = "Faktuur Nummer"
-      Case FkFaktuurDatum
+      Case FkFaktuurdatum
          Naam = "Faktuur Datum"
       Case Else
          Naam = vbNullString
    End Select
-   
+
 EindeRoutine:
    VeldNaam = Naam
    Exit Property
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -210,9 +218,9 @@ Dim Keuze As Long
 Dim RechtsUitlijnen As Boolean
 
    Select Case Veld
-      Case FkFaktuurNummer
+      Case FkFaktuurnummer
          RechtsUitlijnen = False
-      Case FkFaktuurDatum
+      Case FkFaktuurdatum
          RechtsUitlijnen = False
       Case Else
          RechtsUitlijnen = False
@@ -221,7 +229,7 @@ Dim RechtsUitlijnen As Boolean
 EindeRoutine:
    VeldRechtsUitlijnen = RechtsUitlijnen
    Exit Property
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine
@@ -232,11 +240,13 @@ End Property
 Private Sub Class_Initialize()
 On Error GoTo Fout
 Dim Keuze As Long
+
    AantalItemsV = 0
    ReDim DataV(0 To 1, 0 To AantalItemsV) As String
+
 EindeRoutine:
    Exit Sub
-   
+
 Fout:
    Keuze = HandelFoutAf()
    If Keuze = vbIgnore Then Resume EindeRoutine

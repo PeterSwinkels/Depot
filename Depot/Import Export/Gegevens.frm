@@ -61,8 +61,8 @@ Begin VB.Form GegevensVenster
       TabIndex        =   0
       Top             =   120
       Width           =   6135
-      _ExtentX        =   10821
-      _ExtentY        =   5741
+      _extentx        =   10821
+      _extenty        =   5741
    End
    Begin VB.Menu GegevensMenu 
       Caption         =   "&Gegevens"
@@ -100,8 +100,8 @@ Begin VB.Form GegevensVenster
          End
       End
    End
-   Begin VB.Menu DataBronMenu 
-      Caption         =   "&DataBron"
+   Begin VB.Menu DatabronMenu 
+      Caption         =   "&Databron"
       Begin VB.Menu KlantenMenu 
          Caption         =   "&Klanten"
       End
@@ -130,7 +130,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    If MsgBox("Gegevens afdrukken?", vbQuestion Or vbYesNo) = vbYes Then
-      DrukDataAf DataBron
+      DrukDataAf Databron
    End If
    
 EindeRoutine:
@@ -166,8 +166,11 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Me.WindowState = vbMaximized
-   StelDataBronIn DbKlanten
+   StelDatabronIn DbKlanten
    
+   Databron.ResetGegevens
+   Databron.OpenGegevens
+
 EindeRoutine:
    Exit Sub
 
@@ -202,6 +205,7 @@ End Sub
 'Deze procedure past de objecten in dit venster aan de nieuwe afmetingen aan.
 Private Sub Form_Resize()
 On Error Resume Next
+   
    ItemsLijst.Width = Me.ScaleWidth - 2
    ItemsLijst.Height = Me.ScaleHeight - 3
    KnoppenBalk.Left = Me.ScaleWidth - KnoppenBalk.Width - 1
@@ -229,7 +233,7 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure opent het import venster.
+'Deze procedure opent het importvenster.
 Private Sub ImporterenMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long
@@ -248,12 +252,12 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure opent het programma informatie venster.
+'Deze procedure opent het programma informatievenster.
 Private Sub InformatieMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   ToonProgrammaInformatie
+   ToonProgrammainformatie
 
 EindeRoutine:
    Exit Sub
@@ -269,7 +273,7 @@ Private Sub KlantenMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   StelDataBronIn DbKlanten
+   StelDatabronIn DbKlanten
    
 EindeRoutine:
    Exit Sub
@@ -285,7 +289,7 @@ Private Sub MaakItemsOpMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   DataBron.MaakItemsOp
+   Databron.MaakItemsOp
    ItemsLijst.WerkLijstBij
 
 EindeRoutine:
@@ -303,7 +307,7 @@ On Error GoTo Fout
 Dim Keuze As Long
    
    If MsgBox("Huidige gegevens verwijderen?", vbQuestion Or vbYesNo) = vbYes Then
-      DataBron.ResetGegevens
+      Databron.ResetGegevens
       ItemsLijst.WerkLijstBij
    End If
    
@@ -316,14 +320,14 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze proedure verwijdert na bevestiging van de gebruiker alle gegevens uit een databron en laadt de gegevens uit een bestand.
+'Deze proedure verwijdert na bevestiging van de gebruiker alle gegevens uit een databron en laadt de opgeslagen gegevens.
 Private Sub OpenenMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   If MsgBox("Huidige gegevens verwijderen en laden uit een bestand?", vbQuestion Or vbYesNo) = vbYes Then
-      DataBron.ResetGegevens
-      DataBron.OpenGegevens
+   If MsgBox("Huidige gegevens verwijderen en de opgeslagen gegevens laden?", vbQuestion Or vbYesNo) = vbYes Then
+      Databron.ResetGegevens
+      Databron.OpenGegevens
       ItemsLijst.WerkLijstBij
    End If
    
@@ -342,7 +346,7 @@ On Error GoTo Fout
 Dim Keuze As Long
     
     If MsgBox("Oude gegevens overschrijven?", vbExclamation Or vbYesNo) = vbYes Then
-       DataBron.SlaGegevensOp
+       Databron.SlaGegevensOp
     End If
    
 EindeRoutine:
@@ -359,7 +363,7 @@ Private Sub SorteerItemsMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   DataBron.SorteerItems
+   Databron.SorteerItems
    ItemsLijst.WerkLijstBij
    
 EindeRoutine:
@@ -372,7 +376,7 @@ Fout:
 End Sub
 
 'Deze procedure legt de opgegeven databron vast.
-Private Sub StelDataBronIn(DataBronNr As Long)
+Private Sub StelDatabronIn(DataBronNr As Long)
 On Error GoTo Fout
 Dim Keuze As Long
    
@@ -380,14 +384,15 @@ Dim Keuze As Long
       Case DbKlanten
          KlantenMenu.Checked = True
          VoorraadMenu.Checked = False
-         Set DataBron = Klanten
+         Set Databron = Klanten
       Case DbVoorraad
          KlantenMenu.Checked = False
          VoorraadMenu.Checked = True
-         Set DataBron = Voorraad
+         Set Databron = Voorraad
    End Select
    
-   Set ItemsLijst.DataBron = DataBron
+   Set ItemsLijst.Databron = Databron
+   
    ItemsLijst.WerkLijstBij
    
 EindeRoutine:
@@ -404,15 +409,15 @@ Private Sub ToevoegenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   DataBron.StelStandaardWaardesIn
+   Databron.StelStandaardWaardesIn
    
    ActieIsToeVoegen = True
    InvoerVenster.Show vbModal
    
    If Not Buffer(LBound(Buffer())) = vbNullString Then
-      DataBron.VoegItemToe
-      ItemsLijst.Selectie = DataBron.AantalItems() - 1
-      DataBron.WijzigItem ItemsLijst.Selectie()
+      Databron.VoegItemToe
+      ItemsLijst.Selectie = Databron.AantalItems() - 1
+      Databron.WijzigItem ItemsLijst.Selectie()
       ItemsLijst.WerkLijstBij
    End If
    
@@ -430,7 +435,7 @@ Private Sub VerwijderDubbeleItemsMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   DataBron.VerwijderItems VVDubbelNummer
+   Databron.VerwijderItems VVDubbelNummer
    ItemsLijst.WerkLijstBij
    
 EindeRoutine:
@@ -447,7 +452,7 @@ Private Sub VerwijderenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   DataBron.VerwijderItem ItemsLijst.Selectie()
+   Databron.VerwijderItem ItemsLijst.Selectie()
    ItemsLijst.WerkLijstBij
    
 EindeRoutine:
@@ -464,7 +469,7 @@ Private Sub VerwijderItemsZonderCodeMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   DataBron.VerwijderItems VVGeenNummer
+   Databron.VerwijderItems VVGeenNummer
    ItemsLijst.WerkLijstBij
    
 EindeRoutine:
@@ -481,7 +486,7 @@ Private Sub VoorraadMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long
    
-   StelDataBronIn DbVoorraad
+   StelDatabronIn DbVoorraad
    
 EindeRoutine:
    Exit Sub
@@ -498,16 +503,16 @@ On Error GoTo Fout
 Dim Keuze As Long
 Dim Veld As Long
 
-   If Not DataBron.AantalItems() = 0 Then
-      For Veld = 0 To DataBron.AantalVelden() - 1
-         Buffer(Veld) = DataBron.Data(Veld, ItemsLijst.Selectie())
+   If Not Databron.AantalItems() = 0 Then
+      For Veld = 0 To Databron.AantalVelden() - 1
+         Buffer(Veld) = Databron.Data(Veld, ItemsLijst.Selectie())
       Next Veld
       
       ActieIsToeVoegen = False
       InvoerVenster.Show vbModal
       
       If Not Buffer(LBound(Buffer())) = vbNullString Then
-         DataBron.WijzigItem ItemsLijst.Selectie()
+         Databron.WijzigItem ItemsLijst.Selectie()
          ItemsLijst.WerkLijstBij
       End If
    End If
@@ -521,7 +526,7 @@ Fout:
    If Keuze = vbRetry Then Resume
 End Sub
 
-'Deze procedure toont het zoek venster.
+'Deze procedure toont het zoekvenster.
 Private Sub ZoekenMenu_Click()
 On Error GoTo Fout
 Dim Keuze As Long

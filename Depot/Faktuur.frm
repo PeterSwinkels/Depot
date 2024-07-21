@@ -12,7 +12,7 @@ Begin VB.Form FaktuurVenster
    ScaleMode       =   4  'Character
    ScaleWidth      =   89.25
    ShowInTaskbar   =   0   'False
-   Begin DepotBeheerderProgramma.LijstObject ArtikelenLijst 
+   Begin DepotbeheerderProgramma.LijstObject ArtikelenLijst 
       Height          =   3375
       Left            =   120
       TabIndex        =   10
@@ -207,7 +207,7 @@ Begin VB.Form FaktuurVenster
          Width           =   1575
       End
       Begin VB.Label FacktuurnummerLabel 
-         Caption         =   "Faktuur Nummer:"
+         Caption         =   "Faktuurnummer:"
          Height          =   255
          Left            =   0
          TabIndex        =   30
@@ -403,31 +403,32 @@ Dim Keuze As Long
 
    Faktuur.WerkArtikelenBij
    ArtikelenLijst.WerkLijstBij
-   
+
    DatumVeld.Text = Faktuur.Datum()
-   FaktuurnummerVeld.Text = Faktuur.FaktuurNr()
-   KlantnummerVeld.Text = Faktuur.KlantNummer()
+   FaktuurnummerVeld.Text = Faktuur.Faktuurnr()
+   KlantnummerVeld.Text = Faktuur.Klantnummer()
    If Faktuur.IsParticulier() Then ParticulierVeld.Value = vbChecked Else ParticulierVeld.Value = vbUnchecked
-   
-   Faktuur.WerkKlantGegevensBij
+
+   Faktuur.WerkKlantgegevensBij
    KlantStatus.Caption = "Klant"
    If Faktuur.KlantGevonden() Then KlantStatus.Caption = KlantStatus.Caption & ": " Else KlantStatus.Caption = KlantStatus.Caption & " bestaat niet! "
-   KlantnummerVeld.Text = Faktuur.KlantNummer()
-   KlantNaamVeld.Text = Faktuur.KlantNaam()
+   KlantnummerVeld.Text = Faktuur.Klantnummer()
+   KlantnaamVeld.Text = Faktuur.Klantnaam()
    KlantAdresVeld.Text = Faktuur.KlantAdres()
    KlantPostcodePlaatsVeld.Text = Faktuur.KlantPostcodePlaats()
-   KlantTelefoonnummerVeld.Text = Faktuur.KlantTelefoonNummer()
+   KlantTelefoonnummerVeld.Text = Faktuur.KlantTelefoonnummer()
    KlantFaxnummerVeld.Text = Faktuur.KlantFaxNummer()
-   KlantEmailAdresVeld.Text = Faktuur.KlantEmailAdres()
-   
-   KlantNaamVeld.Locked = Not Faktuur.IsParticulier()
+   KlantEmailadresVeld.Text = Faktuur.KlantEmailadres()
+
+   KlantnaamVeld.Locked = Not Faktuur.IsParticulier()
    KlantAdresVeld.Locked = Not Faktuur.IsParticulier()
    KlantPostcodePlaatsVeld.Locked = Not Faktuur.IsParticulier()
    KlantTelefoonnummerVeld.Locked = Not Faktuur.IsParticulier()
    KlantFaxnummerVeld.Locked = Not Faktuur.IsParticulier()
-   KlantEmailAdresVeld.Locked = Not Faktuur.IsParticulier()
-   
+   KlantEmailadresVeld.Locked = Not Faktuur.IsParticulier()
+
    WerkTotalenBij
+
 EindeRoutine:
    Exit Sub
 
@@ -447,6 +448,7 @@ Dim Keuze As Long
    PortoVeld.Text = Faktuur.Porto()
    SubTotaalVeld.Caption = Faktuur.Subtotaal()
    TotaalVeld.Caption = Faktuur.Totaal()
+
 EindeRoutine:
    Exit Sub
 
@@ -464,6 +466,7 @@ Dim Keuze As Long
    If MsgBox("Faktuur afdrukken?", vbQuestion Or vbYesNo) = vbYes Then
       Faktuur.DrukFaktuurAf
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -480,6 +483,7 @@ Dim Keuze As Long
 
    BTWVeld.SelStart = 0
    BTWVeld.SelLength = Len(BTWVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -496,8 +500,9 @@ Dim Keuze As Long
 
    BTWVeld.Text = MaakGetalOp(BTWVeld.Text)
    Faktuur.BTW() = BTWVeld.Text
-   
+
    WerkTotalenBij
+
 EindeRoutine:
    Exit Sub
 
@@ -514,6 +519,7 @@ Dim Keuze As Long
 
    DatumVeld.SelStart = 0
    DatumVeld.SelLength = Len(DatumVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -529,6 +535,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Faktuur.Datum = DatumVeld.Text
+
 EindeRoutine:
    Exit Sub
 
@@ -545,6 +552,7 @@ Dim Keuze As Long
 
    FaktuurnummerVeld.SelStart = 0
    FaktuurnummerVeld.SelLength = Len(FaktuurnummerVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -560,6 +568,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    If InStr(ONGELDIGE_TEKENS, Chr$(KeyAscii)) > 0 Then KeyAscii = Empty
+
 EindeRoutine:
    Exit Sub
 
@@ -575,7 +584,8 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    FaktuurnummerVeld.Text = UCase$(FaktuurnummerVeld.Text)
-   Faktuur.FaktuurNr = FaktuurnummerVeld.Text
+   Faktuur.Faktuurnr = FaktuurnummerVeld.Text
+
 EindeRoutine:
    Exit Sub
 
@@ -591,6 +601,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    WerkFaktuurBij
+
 EindeRoutine:
    Exit Sub
 
@@ -621,6 +632,7 @@ Dim Keuze As Long
          WerkFaktuurBij
       End If
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -641,9 +653,9 @@ Dim Keuze As Long
    DatumVeld.ToolTipText = "De faktuur datum."
    FaktuurnummerVeld.ToolTipText = "Het faktuurnummer."
    KlantAdresVeld.ToolTipText = "Het klant adres."
-   KlantEmailAdresVeld.ToolTipText = "Het klant e-mail adres."
+   KlantEmailadresVeld.ToolTipText = "Het klant e-mailadres."
    KlantFaxnummerVeld.ToolTipText = "Het klant faxnummer."
-   KlantNaamVeld.ToolTipText = "De klant naam."
+   KlantnaamVeld.ToolTipText = "De klant naam."
    KlantnummerVeld.ToolTipText = "Het klantnummer."
    KlantPostcodePlaatsVeld.ToolTipText = "De klant postcode en plaats."
    KlantTelefoonnummerVeld.ToolTipText = "Het klant telefoonnummer."
@@ -655,14 +667,15 @@ Dim Keuze As Long
    ToevoegenKnop.ToolTipText = "Voegt een artikel toe."
    VerwijderenKnop.ToolTipText = "Verwijdert een artikel."
    WijzigenKnop.ToolTipText = "Wijzigt een artikel."
-      
-   Me.Width = DepotBeheerderVenster.Width / 1.3
-   Me.Height = DepotBeheerderVenster.Height / 1.15
+
+   Me.Width = DepotbeheerderVenster.Width / 1.3
+   Me.Height = DepotbeheerderVenster.Height / 1.15
    Me.Left = MenuVenster.Left + MenuVenster.Width + 128
    Me.Top = MenuVenster.Top
-   
+
    Set ArtikelenLijst.DataBron = Faktuur
    Faktuur.MaakNieuwFaktuur
+
 EindeRoutine:
    Exit Sub
 
@@ -675,6 +688,7 @@ End Sub
 'Deze procedure past de objecten in dit venster aan de nieuwe afmetingen aan.
 Private Sub Form_Resize()
 On Error Resume Next
+
    ArtikelenLijst.Width = Me.ScaleWidth - 2
    ArtikelenLijst.Height = Me.ScaleHeight - 20.5
    FaktuurVelden.Left = Me.ScaleWidth - FaktuurVelden.Width - 2
@@ -682,24 +696,8 @@ On Error Resume Next
    KnoppenBalk.Top = Me.ScaleHeight - 8.5
    TotaalVelden.Left = Me.ScaleWidth - TotaalVelden.Width - 2
    TotaalVelden.Top = Me.ScaleHeight - 8
-   
+
    ArtikelenLijst.WerkLijstBij
-End Sub
-
-'Deze procedure legt vast of het faktuur voor een particulier is en past het faktuur aan.
-Private Sub ParticulierVeld_Click()
-On Error GoTo Fout
-Dim Keuze As Long
-
-   Faktuur.IsParticulier = (ParticulierVeld.Value = vbChecked)
-   WerkFaktuurBij
-EindeRoutine:
-   Exit Sub
-
-Fout:
-   Keuze = HandelFoutAf()
-   If Keuze = vbIgnore Then Resume EindeRoutine
-   If Keuze = vbRetry Then Resume
 End Sub
 
 'Deze procedure legt de ingevoerde waarde vast.
@@ -708,6 +706,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Faktuur.KlantAdres = KlantAdresVeld.Text
+
 EindeRoutine:
    Exit Sub
 
@@ -718,11 +717,12 @@ Fout:
 End Sub
 
 'Deze procedure legt de ingevoerde waarde vast.
-Private Sub KlantEmailAdresVeld_LostFocus()
+Private Sub KlantEmailadresVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   Faktuur.KlantEmailAdres = KlantEmailAdresVeld.Text
+   Faktuur.KlantEmailadres = KlantEmailadresVeld.Text
+
 EindeRoutine:
    Exit Sub
 
@@ -738,6 +738,7 @@ On Error GoTo Fout
 Dim Keuze As Long
 
    Faktuur.KlantFaxNummer = KlantFaxnummerVeld.Text
+
 EindeRoutine:
    Exit Sub
 
@@ -748,11 +749,12 @@ Fout:
 End Sub
 
 'Deze procedure legt de ingevoerde waarde vast.
-Private Sub KlantNaamVeld_LostFocus()
+Private Sub KlantnaamVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   Faktuur.KlantNaam = KlantNaamVeld.Text
+   Faktuur.Klantnaam = KlantnaamVeld.Text
+
 EindeRoutine:
    Exit Sub
 
@@ -763,12 +765,13 @@ Fout:
 End Sub
 
 'Deze procedure selecteert automatisch de inhoud van het veld.
-Private Sub KlantNummerVeld_GotFocus()
+Private Sub KlantnummerVeld_GotFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    KlantnummerVeld.SelStart = 0
    KlantnummerVeld.SelLength = Len(KlantnummerVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -779,11 +782,12 @@ Fout:
 End Sub
 
 'Deze procedure filtert ongeldige tekens uit de invoer.
-Private Sub KlantNummerVeld_KeyPress(KeyAscii As Integer)
+Private Sub KlantnummerVeld_KeyPress(KeyAscii As Integer)
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If InStr(ONGELDIGE_TEKENS, Chr$(KeyAscii)) > 0 Then KeyAscii = Empty
+
 EindeRoutine:
    Exit Sub
 
@@ -794,12 +798,13 @@ Fout:
 End Sub
 
 'Deze procedure legt de ingevoerde waarde vast en past het faktuur aan.
-Private Sub KlantNummerVeld_LostFocus()
+Private Sub KlantnummerVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
-   Faktuur.KlantNummer = KlantnummerVeld.Text
+
+   Faktuur.Klantnummer = KlantnummerVeld.Text
    WerkFaktuurBij
+
 EindeRoutine:
    Exit Sub
 
@@ -813,8 +818,9 @@ End Sub
 Private Sub KlantPostcodePlaatsVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    Faktuur.KlantPostcodePlaats = KlantPostcodePlaatsVeld.Text
+
 EindeRoutine:
    Exit Sub
 
@@ -825,11 +831,12 @@ Fout:
 End Sub
 
 'Deze procedure legt de ingevoerde waarde vast.
-Private Sub KlantTelefoonNummerVeld_LostFocus()
+Private Sub KlantTelefoonnummerVeld_LostFocus()
 On Error GoTo Fout
 Dim Keuze As Long
-   
-   Faktuur.KlantTelefoonNummer = KlantTelefoonnummerVeld.Text
+
+   Faktuur.KlantTelefoonnummer = KlantTelefoonnummerVeld.Text
+
 EindeRoutine:
    Exit Sub
 
@@ -843,11 +850,12 @@ End Sub
 Private Sub NieuwKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    If MsgBox("Nieuw faktuur openen?", vbQuestion Or vbYesNo) = vbYes Then
       Faktuur.MaakNieuwFaktuur
       WerkFaktuurBij
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -861,9 +869,10 @@ End Sub
 Private Sub OpenenKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
-   
+
    FakturenVenster.Show
    FakturenVenster.ZOrder
+
 EindeRoutine:
    Exit Sub
 
@@ -878,11 +887,29 @@ Private Sub OpslaanKnop_Click()
 On Error GoTo Fout
 Dim Keuze As Long
 
-   If Faktuur.FaktuurNr() = vbNullString Then
+   If Faktuur.Faktuurnr() = vbNullString Then
       MsgBox "Faktuur heeft geen nummer.", vbExclamation
    Else
       Faktuur.SlaFaktuurOp
    End If
+
+EindeRoutine:
+   Exit Sub
+
+Fout:
+   Keuze = HandelFoutAf()
+   If Keuze = vbIgnore Then Resume EindeRoutine
+   If Keuze = vbRetry Then Resume
+End Sub
+
+'Deze procedure legt vast of het faktuur voor een particulier is en past het faktuur aan.
+Private Sub ParticulierVeld_Click()
+On Error GoTo Fout
+Dim Keuze As Long
+
+   Faktuur.IsParticulier = (ParticulierVeld.Value = vbChecked)
+   WerkFaktuurBij
+
 EindeRoutine:
    Exit Sub
 
@@ -899,6 +926,7 @@ Dim Keuze As Long
 
    PortoVeld.SelStart = 0
    PortoVeld.SelLength = Len(PortoVeld.Text)
+
 EindeRoutine:
    Exit Sub
 
@@ -915,8 +943,9 @@ Dim Keuze As Long
 
    PortoVeld.Text = RondAf(PortoVeld.Text)
    Faktuur.Porto = PortoVeld.Text
-   
+
    WerkTotalenBij
+
 EindeRoutine:
    Exit Sub
 
@@ -935,17 +964,18 @@ Dim Keuze As Long
    ActieIsToeVoegen = True
    Faktuur.StelStandaardWaardesIn
    FaktuurInvoerVenster.Show vbModal
-   
+
    If Not Buffer(FkArtikelNr) = vbNullString Then
       Faktuur.VoegItemToe
       ArtikelenLijst.Selectie = Faktuur.AantalItems() - 1
       Faktuur.WijzigItem ArtikelenLijst.Selectie, Gevonden
       If Not Gevonden Then MsgBox "Artikel bestaat niet.", vbExclamation
    End If
-   
+
    Faktuur.SorteerArtikelen
    ArtikelenLijst.WerkLijstBij
    WerkTotalenBij
+
 EindeRoutine:
    Exit Sub
 
@@ -965,6 +995,7 @@ Dim Keuze As Long
       ArtikelenLijst.WerkLijstBij
       WerkTotalenBij
    End If
+
 EindeRoutine:
    Exit Sub
 
@@ -986,19 +1017,20 @@ Dim Keuze As Long
       Buffer(FkAtikelNaam) = Faktuur.Data(FkAtikelNaam, ArtikelenLijst.Selectie())
       Buffer(FkStukprijs) = Faktuur.Data(FkStukprijs, ArtikelenLijst.Selectie())
       Buffer(FkUitVoorraad) = Faktuur.Data(FkUitVoorraad, ArtikelenLijst.Selectie())
-      
+
       ActieIsToeVoegen = False
       FaktuurInvoerVenster.Show vbModal
-      
+
       If Not Buffer(FkArtikelNr) = vbNullString Then
          Faktuur.WijzigItem ArtikelenLijst.Selectie(), Gevonden
          If Not Gevonden Then MsgBox "Artikel bestaat niet.", vbExclamation
       End If
-      
+
       Faktuur.SorteerArtikelen
       ArtikelenLijst.WerkLijstBij
       WerkTotalenBij
    End If
+
 EindeRoutine:
    Exit Sub
 
